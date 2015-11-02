@@ -27,6 +27,9 @@ class DetailViewController: UIViewController, UISplitViewControllerDelegate {
         
         if let example: Example = self.detailItem  {
             switch example {
+            case .HikeChart:
+                self.setSplitSwipeEnabled(true)
+                self.showExampleController(HikeChartExample())
             case .HelloWorld:
                 self.setSplitSwipeEnabled(true)
                 self.showExampleController(HelloWorld())

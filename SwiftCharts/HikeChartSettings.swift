@@ -6,6 +6,7 @@
 //  Copyright © 2015 Nartex. All rights reserved.
 //
 
+import Foundation
 import UIKit
 import SwiftCharts
 

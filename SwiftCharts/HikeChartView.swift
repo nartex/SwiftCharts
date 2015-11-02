@@ -6,6 +6,7 @@
 //  Copyright © 2015 Nartex. All rights reserved.
 //
 
+import UIKit
 import SwiftCharts
 
 class HikeChartView: UIView {
@@ -68,11 +69,11 @@ class HikeChartView: UIView {
                 
                 // TODO: Make it a loop
                 let chartPointsAreaLayer1 = ChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: self.dataSets![0].points.map({$0.chartPoint!}), areaColor: self.dataSets![0].color.colorWithAlphaComponent(0.4), animDuration: 4, animDelay: 0, addContainerPoints: true)
-                let chartPointsAreaLayer2 = ChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: self.dataSets![1].points.map({$0.chartPoint!}), areaColor: self.dataSets![1].color.colorWithAlphaComponent(0.4), animDuration: 4, animDelay: 0, addContainerPoints: false)
+                let chartPointsAreaLayer2 = ChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: self.dataSets![1].points.map({$0.chartPoint!}), areaColor: self.dataSets![1].color.colorWithAlphaComponent(0.4), animDuration: 4, animDelay: 0, addContainerPoints: true)
                 
                 let models = self.dataSets!.map({ChartLineModel(chartPoints: $0.points.map({$0.chartPoint!}), lineColor: $0.color, lineWidth: 3, animDuration: 3, animDelay: 0)})
                 
-                let chartPointsLineLayer = ChartPointsLineLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, lineModels: models, pathGenerator: CubicLinePathGenerator())
+                let chartPointsLineLayer = ChartPointsLineLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, lineModels: models, pathGenerator: CubicLinePathGenerator(tension1: 0.3, tension2: 0.3))
                 
                 let trackerLayerSettings = ChartPointsLineTrackerLayerSettings(thumbSize: HikeChartSettings.isPad ? 30 : 20, thumbCornerRadius: HikeChartSettings.isPad ? 16 : 10, thumbBorderWidth: HikeChartSettings.isPad ? 4 : 2, infoViewFont: HikeChartSettings.fontWithSize(HikeChartSettings.isPad ? 26 : 16), infoViewSize: CGSizeMake(HikeChartSettings.isPad ? 400 : 160, HikeChartSettings.isPad ? 70 : 40), infoViewCornerRadius: HikeChartSettings.isPad ? 30 : 15)
                 
@@ -88,6 +89,7 @@ class HikeChartView: UIView {
                     guidelinesLayer,
                     chartPointsLineLayer,
                     chartPointsAreaLayer1,
+                    chartPointsAreaLayer2,
                     chartPointsTrackerLayer1,
                     chartPointsTrackerLayer2
                     ])
