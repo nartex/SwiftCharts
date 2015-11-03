@@ -7,9 +7,8 @@
 //
 
 import UIKit
-import SwiftCharts
 
-class HikeChartAreasView: UIView {
+public class HikeChartAreasView: UIView {
     
     private let animDuration: Float
     private let color: UIColor
@@ -27,7 +26,7 @@ class HikeChartAreasView: UIView {
         self.show(path: AreaCubicLinePathGenerator(tension1: 0.3, tension2: 0.3).generatePath(points: points, lineWidth: 1))
     }
     
-    required internal init(coder aDecoder: NSCoder) {
+    required public init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     

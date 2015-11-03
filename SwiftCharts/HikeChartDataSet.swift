@@ -8,12 +8,12 @@
 
 import UIKit
 
-class HikeChartDataSet: NSObject {
+public class HikeChartDataSet: NSObject {
     let label: NSString
     let points: [HikeChartPoint]
     let color: UIColor
     
-    required init(withLabel label: NSString, andPoints points: [HikeChartPoint], andColor color: UIColor) {
+    required public init(withLabel label: NSString, andPoints points: [HikeChartPoint], andColor color: UIColor) {
         self.label = label
         self.points = points
         self.color = color

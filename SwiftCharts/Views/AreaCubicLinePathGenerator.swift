@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SwiftCharts
 
 class AreaCubicLinePathGenerator: ChartLinesViewPathGenerator {
     private let tension1: CGFloat

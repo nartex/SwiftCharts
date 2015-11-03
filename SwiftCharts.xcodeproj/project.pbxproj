@@ -114,21 +114,13 @@
 		067510BF1B8AB36500A37F64 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 067510C11B8AB36500A37F64 /* Main_iPhone.storyboard */; };
 		DBC985CA1BE77431006D410B /* HikeChartExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985C91BE77431006D410B /* HikeChartExample.swift */; };
 		DBC985CF1BE775A3006D410B /* HikeChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985CB1BE775A3006D410B /* HikeChartView.swift */; };
-		DBC985D01BE775A3006D410B /* HikeChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985CB1BE775A3006D410B /* HikeChartView.swift */; };
 		DBC985D11BE775A3006D410B /* HikeChartPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985CC1BE775A3006D410B /* HikeChartPoint.swift */; };
-		DBC985D21BE775A3006D410B /* HikeChartPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985CC1BE775A3006D410B /* HikeChartPoint.swift */; };
 		DBC985D31BE775A3006D410B /* HikeChartDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985CD1BE775A3006D410B /* HikeChartDataSet.swift */; };
-		DBC985D41BE775A3006D410B /* HikeChartDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985CD1BE775A3006D410B /* HikeChartDataSet.swift */; };
 		DBC985D51BE775A3006D410B /* HikeChartSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985CE1BE775A3006D410B /* HikeChartSettings.swift */; };
-		DBC985D61BE775A3006D410B /* HikeChartSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985CE1BE775A3006D410B /* HikeChartSettings.swift */; };
 		DBC985D81BE79FA9006D410B /* HikeChartPointsLineTrackerLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985D71BE79FA9006D410B /* HikeChartPointsLineTrackerLayer.swift */; };
-		DBC985D91BE79FA9006D410B /* HikeChartPointsLineTrackerLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985D71BE79FA9006D410B /* HikeChartPointsLineTrackerLayer.swift */; };
 		DBC985DB1BE8A2A5006D410B /* HikeChartAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985DA1BE8A2A5006D410B /* HikeChartAreasView.swift */; };
-		DBC985DC1BE8A2A5006D410B /* HikeChartAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985DA1BE8A2A5006D410B /* HikeChartAreasView.swift */; };
 		DBC985DE1BE8A42D006D410B /* HikeChartPointsAreaLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985DD1BE8A42D006D410B /* HikeChartPointsAreaLayer.swift */; };
-		DBC985DF1BE8A42D006D410B /* HikeChartPointsAreaLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985DD1BE8A42D006D410B /* HikeChartPointsAreaLayer.swift */; };
 		DBC985E11BE8A6E5006D410B /* AreaCubicLinePathGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985E01BE8A6E5006D410B /* AreaCubicLinePathGenerator.swift */; };
-		DBC985E21BE8A6E5006D410B /* AreaCubicLinePathGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985E01BE8A6E5006D410B /* AreaCubicLinePathGenerator.swift */; };
 		EB08E2331B93A15E0030081C /* ChartAxisValueDouble.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB08E2321B93A15E0030081C /* ChartAxisValueDouble.swift */; };
 		EB4CE97F1B93B2C1005E4264 /* ChartAxisValueDoubleScreenLoc.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB4CE97E1B93B2C1005E4264 /* ChartAxisValueDoubleScreenLoc.swift */; };
 		EB9B7E6B1BB8A575001B89D4 /* StraightLinePathGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9B7E6A1BB8A575001B89D4 /* StraightLinePathGenerator.swift */; };
@@ -684,20 +676,15 @@
 			files = (
 				06342ACA1B8AAD7F001C9F5D /* DetailViewController.swift in Sources */,
 				062D23A51B8AAE5D0017ABB8 /* ScatterExample.swift in Sources */,
-				DBC985D41BE775A3006D410B /* HikeChartDataSet.swift in Sources */,
 				062D23AA1B8AAE5D0017ABB8 /* TrendlineExample.swift in Sources */,
 				062D23A21B8AAE5D0017ABB8 /* MultipleLabelsExample.swift in Sources */,
 				062D239F1B8AAE5D0017ABB8 /* HelloWorld.swift in Sources */,
 				062D23901B8AAE5D0017ABB8 /* BarsPlusMinusAndLinesExample.swift in Sources */,
 				062D23A41B8AAE5D0017ABB8 /* NotNumericExample.swift in Sources */,
-				DBC985D21BE775A3006D410B /* HikeChartPoint.swift in Sources */,
-				DBC985D61BE775A3006D410B /* HikeChartSettings.swift in Sources */,
 				062D23A01B8AAE5D0017ABB8 /* MultipleAxesExample.swift in Sources */,
 				DBC985CA1BE77431006D410B /* HikeChartExample.swift in Sources */,
 				062D239D1B8AAE5D0017ABB8 /* GroupedAndStackedBarsExample.swift in Sources */,
-				DBC985D01BE775A3006D410B /* HikeChartView.swift in Sources */,
 				062D238F1B8AAE5D0017ABB8 /* BarsExample.swift in Sources */,
-				DBC985DC1BE8A2A5006D410B /* HikeChartAreasView.swift in Sources */,
 				062D23A61B8AAE5D0017ABB8 /* ScrollExample.swift in Sources */,
 				062D238E1B8AAE5D0017ABB8 /* AreasExample.swift in Sources */,
 				062D23A31B8AAE5D0017ABB8 /* NotificationsExample.swift in Sources */,
@@ -705,8 +692,6 @@
 				062D23A81B8AAE5D0017ABB8 /* TargetExample.swift in Sources */,
 				062D23A91B8AAE5D0017ABB8 /* TrackerExample.swift in Sources */,
 				06342AC81B8AAD7F001C9F5D /* MasterViewController.swift in Sources */,
-				DBC985E21BE8A6E5006D410B /* AreaCubicLinePathGenerator.swift in Sources */,
-				DBC985DF1BE8A42D006D410B /* HikeChartPointsAreaLayer.swift in Sources */,
 				062D23A71B8AAE5D0017ABB8 /* StackedBarsExample.swift in Sources */,
 				062D23971B8AAE5D0017ABB8 /* CoordsExample.swift in Sources */,
 				062D23981B8AAE5D0017ABB8 /* CubicLinesExample.swift in Sources */,
@@ -716,7 +701,6 @@
 				062D23931B8AAE5D0017ABB8 /* CandleStickExample.swift in Sources */,
 				062D23911B8AAE5D0017ABB8 /* BarsPlusMinusWithGradientExample.swift in Sources */,
 				062D239E1B8AAE5D0017ABB8 /* GroupedBarsExample.swift in Sources */,
-				DBC985D91BE79FA9006D410B /* HikeChartPointsLineTrackerLayer.swift in Sources */,
 				062D239C1B8AAE5D0017ABB8 /* ExamplesDefaults.swift in Sources */,
 				062D23991B8AAE5D0017ABB8 /* CustomUnitsExample.swift in Sources */,
 				062D239A1B8AAE5D0017ABB8 /* Env.swift in Sources */,

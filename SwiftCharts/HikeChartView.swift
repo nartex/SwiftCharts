@@ -7,9 +7,8 @@
 //
 
 import UIKit
-import SwiftCharts
 
-class HikeChartView: UIView {
+public class HikeChartView: UIView {
     
     var dataSets: [HikeChartDataSet]?
     var chart: Chart?
@@ -20,24 +19,24 @@ class HikeChartView: UIView {
     
     var coordsSpace: ChartCoordsSpaceLeftBottomSingleAxis?
     
-    override var frame: CGRect {
+    override public var frame: CGRect {
         didSet {
             chartInit()
         }
     }
     
-    override func awakeFromNib() {
+    override public func awakeFromNib() {
         super.awakeFromNib()
     }
     
-    required init(frame: CGRect, dataSets: [HikeChartDataSet]) {
+    required public init(frame: CGRect, dataSets: [HikeChartDataSet]) {
         self.dataSets = dataSets
         super.init(frame: frame)
         
         chartInit()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     

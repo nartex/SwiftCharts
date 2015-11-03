@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SwiftCharts
 
 class HikeChartExample: UIViewController {
     var superAwsomeHikeChartView : HikeChartView?

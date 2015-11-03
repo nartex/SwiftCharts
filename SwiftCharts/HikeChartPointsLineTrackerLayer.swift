@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SwiftCharts
 
 public struct HikeChartPointsLineTrackerLayerSettings {
     let thumbSize: CGFloat

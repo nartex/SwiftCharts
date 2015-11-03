@@ -8,9 +8,8 @@
 
 import Foundation
 import UIKit
-import SwiftCharts
 
-class HikeChartSettings: NSObject {
+public class HikeChartSettings: NSObject {
     
     static let isPad = UIDevice.currentDevice().userInterfaceIdiom == .Pad
     

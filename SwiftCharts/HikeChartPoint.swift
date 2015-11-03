@@ -7,9 +7,8 @@
 //
 
 import UIKit
-import SwiftCharts
 
-class HikeChartPoint: NSObject {
+public class HikeChartPoint: NSObject {
     private static let xs : [Int] = [150, 175, 200, 225, 250]
     private static let yOffsetMax : Int = 10
     
@@ -25,7 +24,7 @@ class HikeChartPoint: NSObject {
     
     let labelSettings = ChartLabelSettings(font: HikeChartSettings.labelFont)
     
-    required init(withX x: NSNumber, andY y: NSNumber){
+    required public init(withX x: NSNumber, andY y: NSNumber){
         self.x = x
         self.y = y
         super.init()
@@ -33,7 +32,7 @@ class HikeChartPoint: NSObject {
         self.chartPoint = ChartPoint(x: ChartAxisValueDouble(Double(x), labelSettings: labelSettings), y: ChartAxisValueDouble(Double(y)))
     }
     
-    static func generateRandomPointArray(numberOfPoint: Int) -> [HikeChartPoint] {
+    public static func generateRandomPointArray(numberOfPoint: Int) -> [HikeChartPoint] {
         var outputArray = [HikeChartPoint]()
         var lastValue: HikeChartPoint?
         var yOffset: Int? = randomInt(min: 0, max: yOffsetMax * 2)
@@ -64,7 +63,7 @@ class HikeChartPoint: NSObject {
         return outputArray
     }
     
-    static func randomInt(min min: Int, max: Int) -> Int {
+    private static func randomInt(min min: Int, max: Int) -> Int {
         if max < min { return min }
         return Int(arc4random_uniform(UInt32((max - min) + 1))) + min
     }
