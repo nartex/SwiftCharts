@@ -1,6 +1,6 @@
 //
 //  HikeChartSettings.swift
-//  SwiftChartsObjectiveCIntegrationTest
+//  SwiftCharts
 //
 //  Created by Nicolas Klein on 30/10/15.
 //  Copyright © 2015 Nartex. All rights reserved.
