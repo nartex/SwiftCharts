@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.license = { :type => "Apache License, Version 2.0", :file => "LICENSE" }
   s.authors = "Ivan Schuetz"
   s.ios.deployment_target = "8.0"
-  s.source = { :git => "https://github.com/nartex/SwiftCharts.git" }
+  s.source = { :git => "https://github.com/nartex/SwiftCharts.git", :head }
   s.source_files = 'SwiftCharts/*.swift', 'SwiftCharts/**/*.swift'
   s.frameworks = "Foundation", "UIKit", "CoreGraphics"
 end
