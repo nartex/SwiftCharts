@@ -49,7 +49,7 @@ public class ChartPointsLineLayer<T: ChartPoint>: ChartPointsLayer<T> {
         )
     }
     
-    override func display(chart chart: Chart) {
+    override public func display(chart chart: Chart) {
         let screenLines = self.lineModels.map{self.toScreenLine(lineModel: $0, chart: chart)}
         
         for screenLine in screenLines {

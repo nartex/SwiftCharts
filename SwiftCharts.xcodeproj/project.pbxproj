@@ -121,6 +121,14 @@
 		DBC985D41BE775A3006D410B /* HikeChartDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985CD1BE775A3006D410B /* HikeChartDataSet.swift */; };
 		DBC985D51BE775A3006D410B /* HikeChartSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985CE1BE775A3006D410B /* HikeChartSettings.swift */; };
 		DBC985D61BE775A3006D410B /* HikeChartSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985CE1BE775A3006D410B /* HikeChartSettings.swift */; };
+		DBC985D81BE79FA9006D410B /* HikeChartPointsLineTrackerLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985D71BE79FA9006D410B /* HikeChartPointsLineTrackerLayer.swift */; };
+		DBC985D91BE79FA9006D410B /* HikeChartPointsLineTrackerLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985D71BE79FA9006D410B /* HikeChartPointsLineTrackerLayer.swift */; };
+		DBC985DB1BE8A2A5006D410B /* HikeChartAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985DA1BE8A2A5006D410B /* HikeChartAreasView.swift */; };
+		DBC985DC1BE8A2A5006D410B /* HikeChartAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985DA1BE8A2A5006D410B /* HikeChartAreasView.swift */; };
+		DBC985DE1BE8A42D006D410B /* HikeChartPointsAreaLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985DD1BE8A42D006D410B /* HikeChartPointsAreaLayer.swift */; };
+		DBC985DF1BE8A42D006D410B /* HikeChartPointsAreaLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985DD1BE8A42D006D410B /* HikeChartPointsAreaLayer.swift */; };
+		DBC985E11BE8A6E5006D410B /* AreaCubicLinePathGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985E01BE8A6E5006D410B /* AreaCubicLinePathGenerator.swift */; };
+		DBC985E21BE8A6E5006D410B /* AreaCubicLinePathGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC985E01BE8A6E5006D410B /* AreaCubicLinePathGenerator.swift */; };
 		EB08E2331B93A15E0030081C /* ChartAxisValueDouble.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB08E2321B93A15E0030081C /* ChartAxisValueDouble.swift */; };
 		EB4CE97F1B93B2C1005E4264 /* ChartAxisValueDoubleScreenLoc.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB4CE97E1B93B2C1005E4264 /* ChartAxisValueDoubleScreenLoc.swift */; };
 		EB9B7E6B1BB8A575001B89D4 /* StraightLinePathGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9B7E6A1BB8A575001B89D4 /* StraightLinePathGenerator.swift */; };
@@ -263,6 +271,10 @@
 		DBC985CC1BE775A3006D410B /* HikeChartPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HikeChartPoint.swift; sourceTree = "<group>"; };
 		DBC985CD1BE775A3006D410B /* HikeChartDataSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HikeChartDataSet.swift; sourceTree = "<group>"; };
 		DBC985CE1BE775A3006D410B /* HikeChartSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HikeChartSettings.swift; sourceTree = "<group>"; };
+		DBC985D71BE79FA9006D410B /* HikeChartPointsLineTrackerLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HikeChartPointsLineTrackerLayer.swift; sourceTree = "<group>"; };
+		DBC985DA1BE8A2A5006D410B /* HikeChartAreasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HikeChartAreasView.swift; sourceTree = "<group>"; };
+		DBC985DD1BE8A42D006D410B /* HikeChartPointsAreaLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HikeChartPointsAreaLayer.swift; sourceTree = "<group>"; };
+		DBC985E01BE8A6E5006D410B /* AreaCubicLinePathGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AreaCubicLinePathGenerator.swift; path = Views/AreaCubicLinePathGenerator.swift; sourceTree = "<group>"; };
 		EB08E2321B93A15E0030081C /* ChartAxisValueDouble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartAxisValueDouble.swift; sourceTree = "<group>"; };
 		EB4CE97E1B93B2C1005E4264 /* ChartAxisValueDoubleScreenLoc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartAxisValueDoubleScreenLoc.swift; sourceTree = "<group>"; };
 		EB9B7E6A1BB8A575001B89D4 /* StraightLinePathGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StraightLinePathGenerator.swift; sourceTree = "<group>"; };
@@ -494,8 +506,8 @@
 				06405DF31B8AA81D00A689FF /* ChartPointsLayer.swift */,
 				06405DF41B8AA81D00A689FF /* ChartPointsLineLayer.swift */,
 				06405DF51B8AA81D00A689FF /* ChartPointsLineTrackerLayer.swift */,
-				06405DF61B8AA81D00A689FF /* ChartPointsScatterLayer.swift */,
 				06405DF71B8AA81D00A689FF /* ChartPointsSingleViewLayer.swift */,
+				06405DF61B8AA81D00A689FF /* ChartPointsScatterLayer.swift */,
 				06405DF81B8AA81D00A689FF /* ChartPointsTrackerLayer.swift */,
 				06405DF91B8AA81D00A689FF /* ChartPointsViewsLayer.swift */,
 				06405DFA1B8AA81D00A689FF /* ChartShowCoordsLinesLayer.swift */,
@@ -548,6 +560,10 @@
 				DBC985CC1BE775A3006D410B /* HikeChartPoint.swift */,
 				DBC985CD1BE775A3006D410B /* HikeChartDataSet.swift */,
 				DBC985CE1BE775A3006D410B /* HikeChartSettings.swift */,
+				DBC985D71BE79FA9006D410B /* HikeChartPointsLineTrackerLayer.swift */,
+				DBC985DA1BE8A2A5006D410B /* HikeChartAreasView.swift */,
+				DBC985DD1BE8A42D006D410B /* HikeChartPointsAreaLayer.swift */,
+				DBC985E01BE8A6E5006D410B /* AreaCubicLinePathGenerator.swift */,
 			);
 			name = HikeChart;
 			sourceTree = "<group>";
@@ -681,6 +697,7 @@
 				062D239D1B8AAE5D0017ABB8 /* GroupedAndStackedBarsExample.swift in Sources */,
 				DBC985D01BE775A3006D410B /* HikeChartView.swift in Sources */,
 				062D238F1B8AAE5D0017ABB8 /* BarsExample.swift in Sources */,
+				DBC985DC1BE8A2A5006D410B /* HikeChartAreasView.swift in Sources */,
 				062D23A61B8AAE5D0017ABB8 /* ScrollExample.swift in Sources */,
 				062D238E1B8AAE5D0017ABB8 /* AreasExample.swift in Sources */,
 				062D23A31B8AAE5D0017ABB8 /* NotificationsExample.swift in Sources */,
@@ -688,6 +705,8 @@
 				062D23A81B8AAE5D0017ABB8 /* TargetExample.swift in Sources */,
 				062D23A91B8AAE5D0017ABB8 /* TrackerExample.swift in Sources */,
 				06342AC81B8AAD7F001C9F5D /* MasterViewController.swift in Sources */,
+				DBC985E21BE8A6E5006D410B /* AreaCubicLinePathGenerator.swift in Sources */,
+				DBC985DF1BE8A42D006D410B /* HikeChartPointsAreaLayer.swift in Sources */,
 				062D23A71B8AAE5D0017ABB8 /* StackedBarsExample.swift in Sources */,
 				062D23971B8AAE5D0017ABB8 /* CoordsExample.swift in Sources */,
 				062D23981B8AAE5D0017ABB8 /* CubicLinesExample.swift in Sources */,
@@ -697,6 +716,7 @@
 				062D23931B8AAE5D0017ABB8 /* CandleStickExample.swift in Sources */,
 				062D23911B8AAE5D0017ABB8 /* BarsPlusMinusWithGradientExample.swift in Sources */,
 				062D239E1B8AAE5D0017ABB8 /* GroupedBarsExample.swift in Sources */,
+				DBC985D91BE79FA9006D410B /* HikeChartPointsLineTrackerLayer.swift in Sources */,
 				062D239C1B8AAE5D0017ABB8 /* ExamplesDefaults.swift in Sources */,
 				062D23991B8AAE5D0017ABB8 /* CustomUnitsExample.swift in Sources */,
 				062D239A1B8AAE5D0017ABB8 /* Env.swift in Sources */,
@@ -710,6 +730,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBC985E11BE8A6E5006D410B /* AreaCubicLinePathGenerator.swift in Sources */,
 				06405E411B8AA81D00A689FF /* ChartStackedBarsLayer.swift in Sources */,
 				06405E281B8AA81D00A689FF /* ChartConfig.swift in Sources */,
 				DBC985D31BE775A3006D410B /* HikeChartDataSet.swift in Sources */,
@@ -722,6 +743,7 @@
 				06405E1D1B8AA81D00A689FF /* ChartAxisValueInt.swift in Sources */,
 				EB08E2331B93A15E0030081C /* ChartAxisValueDouble.swift in Sources */,
 				06405E291B8AA81D00A689FF /* LineChart.swift in Sources */,
+				DBC985DB1BE8A2A5006D410B /* HikeChartAreasView.swift in Sources */,
 				06405E3D1B8AA81D00A689FF /* ChartPointsSingleViewLayer.swift in Sources */,
 				06405E431B8AA81D00A689FF /* ChartAreasView.swift in Sources */,
 				06405E3B1B8AA81D00A689FF /* ChartPointsLineTrackerLayer.swift in Sources */,
@@ -748,6 +770,7 @@
 				06405E331B8AA81D00A689FF /* ChartGuideLinesLayer.swift in Sources */,
 				06405E2E1B8AA81D00A689FF /* ChartBarsLayer.swift in Sources */,
 				06405E4C1B8AA81D00A689FF /* CubicLinePathGenerator.swift in Sources */,
+				DBC985DE1BE8A42D006D410B /* HikeChartPointsAreaLayer.swift in Sources */,
 				06405E2D1B8AA81D00A689FF /* ChartLineDrawer.swift in Sources */,
 				06405E151B8AA81D00A689FF /* ChartAxisXLowLayerDefault.swift in Sources */,
 				06405E3A1B8AA81D00A689FF /* ChartPointsLineLayer.swift in Sources */,
@@ -759,6 +782,7 @@
 				06405E111B8AA81D00A689FF /* ChartAxisModel.swift in Sources */,
 				06405E1E1B8AA81D00A689FF /* ChartAxisValueString.swift in Sources */,
 				06405E401B8AA81D00A689FF /* ChartShowCoordsLinesLayer.swift in Sources */,
+				DBC985D81BE79FA9006D410B /* HikeChartPointsLineTrackerLayer.swift in Sources */,
 				06405E481B8AA81D00A689FF /* ChartPointTextCircleView.swift in Sources */,
 				EB4CE97F1B93B2C1005E4264 /* ChartAxisValueDoubleScreenLoc.swift in Sources */,
 				06405E1B1B8AA81D00A689FF /* ChartAxisValueFloat.swift in Sources */,

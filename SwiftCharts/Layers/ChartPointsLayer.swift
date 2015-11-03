@@ -22,7 +22,7 @@ public struct ChartPointLayerModel<T: ChartPoint> {
 
 public class ChartPointsLayer<T: ChartPoint>: ChartCoordsSpaceLayer {
 
-    let chartPointsModels: [ChartPointLayerModel<T>]
+    public let chartPointsModels: [ChartPointLayerModel<T>]
     
     private let displayDelay: Float
     
@@ -52,7 +52,7 @@ public class ChartPointsLayer<T: ChartPoint>: ChartCoordsSpaceLayer {
         }
     }
     
-    func display(chart chart: Chart) {}
+    public func display(chart chart: Chart) {}
     
     public func chartPointScreenLoc(chartPoint: ChartPoint) -> CGPoint {
         return self.modelLocToScreenLoc(x: chartPoint.x.scalar, y: chartPoint.y.scalar)

@@ -17,7 +17,7 @@ public class ChartPointsSingleViewLayer<T: ChartPoint, U: UIView>: ChartPointsVi
         super.init(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints, viewGenerator: viewGenerator)
     }
 
-    override func display(chart chart: Chart) {
+    override public func display(chart chart: Chart) {
         // skip adding views - this layer manages its own list
     }
     

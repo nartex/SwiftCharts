@@ -12,11 +12,13 @@ import SwiftCharts
 class HikeChartView: UIView {
     
     var dataSets: [HikeChartDataSet]?
-    private var chart: Chart?
+    var chart: Chart?
     var axisColor = UIColor.blackColor()
     
     var xAxisTitle = "Distance"
     var yAxisTitle = "Altitude"
+    
+    var coordsSpace: ChartCoordsSpaceLeftBottomSingleAxis?
     
     override var frame: CGRect {
         didSet {
@@ -62,23 +64,30 @@ class HikeChartView: UIView {
             
             let chartFrame = HikeChartSettings.chartFrame(self.bounds)
             
-            let coordsSpace = ChartCoordsSpaceLeftBottomSingleAxis(chartSettings: HikeChartSettings.chartSettings, chartFrame: chartFrame, xModel: xModel, yModel: yModel)
+            self.coordsSpace = ChartCoordsSpaceLeftBottomSingleAxis(chartSettings: HikeChartSettings.chartSettings, chartFrame: chartFrame, xModel: xModel, yModel: yModel)
             
             dispatch_async(dispatch_get_main_queue(), {
-                let (xAxis, yAxis, innerFrame) = (coordsSpace.xAxis, coordsSpace.yAxis, coordsSpace.chartInnerFrame)
+                let (xAxis, yAxis, innerFrame) = (self.coordsSpace!.xAxis, self.coordsSpace!.yAxis, self.coordsSpace!.chartInnerFrame)
                 
                 // TODO: Make it a loop
-                let chartPointsAreaLayer1 = ChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: self.dataSets![0].points.map({$0.chartPoint!}), areaColor: self.dataSets![0].color.colorWithAlphaComponent(0.4), animDuration: 4, animDelay: 0, addContainerPoints: true)
-                let chartPointsAreaLayer2 = ChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: self.dataSets![1].points.map({$0.chartPoint!}), areaColor: self.dataSets![1].color.colorWithAlphaComponent(0.4), animDuration: 4, animDelay: 0, addContainerPoints: true)
+                var chartPointsAreaLayer1Points = [ChartPoint]()
+                chartPointsAreaLayer1Points.appendContentsOf(self.dataSets![0].points.map({$0.chartPoint!}))
+                chartPointsAreaLayer1Points.append(ChartPoint(x: self.dataSets![0].points.last!.chartPoint!.x, y: yAxis.axisValues[0]))
+                var chartPointsAreaLayer2Points = [ChartPoint]()
+                chartPointsAreaLayer2Points.appendContentsOf(self.dataSets![1].points.map({$0.chartPoint!}))
+                chartPointsAreaLayer2Points.append(ChartPoint(x: self.dataSets![1].points.last!.chartPoint!.x, y: yAxis.axisValues[0]))
                 
-                let models = self.dataSets!.map({ChartLineModel(chartPoints: $0.points.map({$0.chartPoint!}), lineColor: $0.color, lineWidth: 3, animDuration: 3, animDelay: 0)})
+                let chartPointsAreaLayer1 = HikeChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPointsAreaLayer1Points, areaColor: self.dataSets![0].color.colorWithAlphaComponent(0.2), animDuration: 4, animDelay: 0, addContainerPoints: true)
+                let chartPointsAreaLayer2 = HikeChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPointsAreaLayer2Points, areaColor: self.dataSets![1].color.colorWithAlphaComponent(0.2), animDuration: 4, animDelay: 0, addContainerPoints: true)
+                
+                let models = self.dataSets!.map({ChartLineModel(chartPoints: $0.points.map({$0.chartPoint!}), lineColor: $0.color, lineWidth: 4, animDuration: 2, animDelay: 0)})
                 
                 let chartPointsLineLayer = ChartPointsLineLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, lineModels: models, pathGenerator: CubicLinePathGenerator(tension1: 0.3, tension2: 0.3))
                 
-                let trackerLayerSettings = ChartPointsLineTrackerLayerSettings(thumbSize: HikeChartSettings.isPad ? 30 : 20, thumbCornerRadius: HikeChartSettings.isPad ? 16 : 10, thumbBorderWidth: HikeChartSettings.isPad ? 4 : 2, infoViewFont: HikeChartSettings.fontWithSize(HikeChartSettings.isPad ? 26 : 16), infoViewSize: CGSizeMake(HikeChartSettings.isPad ? 400 : 160, HikeChartSettings.isPad ? 70 : 40), infoViewCornerRadius: HikeChartSettings.isPad ? 30 : 15)
+                let trackerLayerSettings = HikeChartPointsLineTrackerLayerSettings(thumbSize: HikeChartSettings.isPad ? 18 : 12, thumbCornerRadius: HikeChartSettings.isPad ? 9 : 6, thumbBorderWidth: HikeChartSettings.isPad ? 4 : 2)
                 
-                let chartPointsTrackerLayer1 = ChartPointsLineTrackerLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: self.dataSets![0].points.map({$0.chartPoint!}), lineColor: UIColor.blackColor(), animDuration: 1, animDelay: 2, settings: trackerLayerSettings)
-                let chartPointsTrackerLayer2 = ChartPointsLineTrackerLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: self.dataSets![1].points.map({$0.chartPoint!}), lineColor: UIColor.blackColor(), animDuration: 1, animDelay: 2, settings: trackerLayerSettings)
+                let chartPointsTrackerLayer1 = HikeChartPointsLineTrackerLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints, lineColor: UIColor.blackColor(), animDuration: 1, animDelay: 2, settings: trackerLayerSettings, dataSets: self.dataSets!)
+                //let chartPointsTrackerLayer2 = ChartPointsLineTrackerLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: self.dataSets![1].points.map({$0.chartPoint!}), lineColor: UIColor.blackColor(), animDuration: 1, animDelay: 2, settings: trackerLayerSettings)
                 
                 let settings = ChartGuideLinesLayerSettings(linesColor: UIColor.blackColor(), linesWidth: HikeChartSettings.guidelinesWidth)
                 let guidelinesLayer = ChartGuideLinesLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, axis: .Y, settings: settings)
@@ -90,8 +99,7 @@ class HikeChartView: UIView {
                     chartPointsLineLayer,
                     chartPointsAreaLayer1,
                     chartPointsAreaLayer2,
-                    chartPointsTrackerLayer1,
-                    chartPointsTrackerLayer2
+                    chartPointsTrackerLayer1
                     ])
                 
                 for view in self.subviews {

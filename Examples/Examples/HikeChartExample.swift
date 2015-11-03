@@ -15,8 +15,8 @@ class HikeChartExample: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var hikeDefaultPoints = HikeChartDataSet(withLabel: "default_points", andPoints: HikeChartPoint.generateRandomPointArray(50), andColor: UIColor.redColor())
-        var hikeUserPoints = HikeChartDataSet(withLabel: "user_points", andPoints: HikeChartPoint.generateRandomPointArray(30), andColor: UIColor.blueColor())
+        var hikeDefaultPoints = HikeChartDataSet(withLabel: "default_points", andPoints: HikeChartPoint.generateRandomPointArray(20), andColor: UIColor.redColor())
+        var hikeUserPoints = HikeChartDataSet(withLabel: "user_points", andPoints: HikeChartPoint.generateRandomPointArray(15), andColor: UIColor.blueColor())
         
         superAwsomeHikeChartView = HikeChartView(frame: view.frame, dataSets: [hikeDefaultPoints, hikeUserPoints])
         superAwsomeHikeChartView?.autoresizingMask = [UIViewAutoresizing.FlexibleWidth, UIViewAutoresizing.FlexibleHeight]

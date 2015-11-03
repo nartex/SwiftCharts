@@ -1,14 +1,15 @@
 //
-//  ChartPointsAreaLayer.swift
-//  swiftCharts
+//  HikeChartPointsAreaLayer.swift
+//  SwiftCharts
 //
-//  Created by ischuetz on 15/04/15.
-//  Copyright (c) 2015 ivanschuetz. All rights reserved.
+//  Created by Nicolas Klein on 03/11/15.
+//  Copyright © 2015 ivanschuetz. All rights reserved.
 //
 
 import UIKit
+import SwiftCharts
 
-public class ChartPointsAreaLayer<T: ChartPoint>: ChartPointsLayer<T> {
+class HikeChartPointsAreaLayer<T: ChartPoint>: ChartPointsLayer<T> {
     
     private let areaColor: UIColor
     private let animDuration: Float
@@ -32,12 +33,14 @@ public class ChartPointsAreaLayer<T: ChartPoint>: ChartPointsLayer<T> {
         
         let bottomY = origin.y + self.innerFrame.height
         
+        // TODO: Get the correct x stop point
+        
         if self.addContainerPoints {
-            points.append(CGPointMake(origin.x + xLength, bottomY))
+            //points.append(CGPointMake(origin.x + xLength, bottomY))
             points.append(CGPointMake(origin.x, bottomY))
         }
         
-        let areaView = ChartAreasView(points: points, frame: chart.bounds, color: self.areaColor, animDuration: self.animDuration, animDelay: self.animDelay)
+        let areaView = HikeChartAreasView(points: points, frame: chart.bounds, color: self.areaColor, animDuration: self.animDuration, animDelay: self.animDelay)
         chart.addSubview(areaView)
     }
 }
