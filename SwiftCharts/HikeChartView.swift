@@ -76,10 +76,10 @@ public class HikeChartView: UIView {
                 chartPointsAreaLayer2Points.appendContentsOf(self.dataSets![1].points.map({$0.chartPoint!}))
                 chartPointsAreaLayer2Points.append(ChartPoint(x: self.dataSets![1].points.last!.chartPoint!.x, y: yAxis.axisValues[0]))
                 
-                let chartPointsAreaLayer1 = HikeChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPointsAreaLayer1Points, areaColor: self.dataSets![0].color.colorWithAlphaComponent(0.2), animDuration: 4, animDelay: 0, addContainerPoints: true)
-                let chartPointsAreaLayer2 = HikeChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPointsAreaLayer2Points, areaColor: self.dataSets![1].color.colorWithAlphaComponent(0.2), animDuration: 4, animDelay: 0, addContainerPoints: true)
+                let chartPointsAreaLayer1 = HikeChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPointsAreaLayer1Points, areaColor: self.dataSets![0].color.colorWithAlphaComponent(0.2), animDuration: 3, animDelay: 0, addContainerPoints: true)
+                let chartPointsAreaLayer2 = HikeChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPointsAreaLayer2Points, areaColor: self.dataSets![1].color.colorWithAlphaComponent(0.2), animDuration: 3, animDelay: 0, addContainerPoints: true)
                 
-                let models = self.dataSets!.map({ChartLineModel(chartPoints: $0.points.map({$0.chartPoint!}), lineColor: $0.color, lineWidth: 4, animDuration: 2, animDelay: 0)})
+                let models = self.dataSets!.map({ChartLineModel(chartPoints: $0.points.map({$0.chartPoint!}), lineColor: $0.color, lineWidth: 4, animDuration: 1, animDelay: 0)})
                 
                 let chartPointsLineLayer = ChartPointsLineLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, lineModels: models, pathGenerator: CubicLinePathGenerator(tension1: 0.3, tension2: 0.3))
                 
