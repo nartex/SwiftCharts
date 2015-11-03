@@ -17,13 +17,13 @@ class AreaCubicLinePathGenerator: ChartLinesViewPathGenerator {
      - parameter tension1: p1 tension, where 0 is straight line. A value higher than 0.3 is not recommended.
      - parameter tension2: p2 tension, where 0 is straight line. A value higher than 0.3 is not recommended.
      */
-    public init(tension1: CGFloat, tension2: CGFloat) {
+    internal init(tension1: CGFloat, tension2: CGFloat) {
         self.tension1 = tension1
         self.tension2 = tension2
     }
     
     // src: http://stackoverflow.com/a/29876400/930450 (modified)
-    public func generatePath(points points: [CGPoint], lineWidth: CGFloat) -> UIBezierPath {
+    internal func generatePath(points points: [CGPoint], lineWidth: CGFloat) -> UIBezierPath {
         
         let path = UIBezierPath()
         var p0: CGPoint

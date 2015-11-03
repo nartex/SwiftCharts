@@ -28,7 +28,7 @@ public struct HikeChartPointsLineTrackerLayerSettings {
         thumbBorderColor: UIColor = UIColor.blackColor(),
         thumbBGColor: UIColor = UIColor.whiteColor(),
         infoViewFontColor: UIColor = UIColor.blackColor(),
-        infoViewBackgroundColor: UIColor = UIColor.blackColor().colorWithAlphaComponent(0.5),
+        infoViewBackgroundColor: UIColor = UIColor(red: 10/256, green: 10/256, blue: 10/256, alpha: 0.75),
         infoViewLabelDefaultHeight: Int = 18,
         infoViewLabelDefaultWidth: Int = 110,
         infoViewLabelDefaultMargin: Int = 4
@@ -49,6 +49,8 @@ public struct HikeChartPointsLineTrackerLayerSettings {
 class HikeChartPointsLineTrackerLayer<T: ChartPoint>: ChartPointsLayer<T> {
     
     var altitudes = [Double]()
+    
+    var previousAltitudesCount = 0
     
     let dataSets: [HikeChartDataSet]
     
@@ -167,7 +169,7 @@ class HikeChartPointsLineTrackerLayer<T: ChartPoint>: ChartPointsLayer<T> {
         let currentPosY: CGFloat = 20
         let currentPositionInfoOverlay = UIView(frame: CGRectMake(currentPosX, currentPosY, currentPosW, currentPosH))
         
-        currentPositionInfoOverlay.layer.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.9).CGColor
+        currentPositionInfoOverlay.layer.backgroundColor = settings.infoViewBackgroundColor.CGColor
         currentPositionInfoOverlay.layer.cornerRadius = CGFloat(settings.infoViewLabelDefaultMargin)
         currentPositionInfoOverlay.alpha = 0
         
@@ -373,6 +375,8 @@ class HikeChartPointsLineTrackerLayer<T: ChartPoint>: ChartPointsLayer<T> {
             currentPositionInfoOverlay?.addSubview(currentInfoLabelOverlays[dataSetReference])
             dataSetReference++
         }
+        
+        previousAltitudesCount = altitudes.count
     }
     
     func setCurrentPositionInfoOverlay(left: Bool) {

@@ -16,7 +16,7 @@ class HikeChartPointsAreaLayer<T: ChartPoint>: ChartPointsLayer<T> {
     private let animDelay: Float
     private let addContainerPoints: Bool
     
-    public init(xAxis: ChartAxisLayer, yAxis: ChartAxisLayer, innerFrame: CGRect, chartPoints: [T], areaColor: UIColor, animDuration: Float, animDelay: Float, addContainerPoints: Bool) {
+    internal init(xAxis: ChartAxisLayer, yAxis: ChartAxisLayer, innerFrame: CGRect, chartPoints: [T], areaColor: UIColor, animDuration: Float, animDelay: Float, addContainerPoints: Bool) {
         self.areaColor = areaColor
         self.animDuration = animDuration
         self.animDelay = animDelay
@@ -25,18 +25,14 @@ class HikeChartPointsAreaLayer<T: ChartPoint>: ChartPointsLayer<T> {
         super.init(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints)
     }
     
-    override public func display(chart chart: Chart) {
+    override internal func display(chart chart: Chart) {
         var points = self.chartPointScreenLocs
         
         let origin = self.innerFrame.origin
-        let xLength = self.innerFrame.width
         
         let bottomY = origin.y + self.innerFrame.height
         
-        // TODO: Get the correct x stop point
-        
         if self.addContainerPoints {
-            //points.append(CGPointMake(origin.x + xLength, bottomY))
             points.append(CGPointMake(origin.x, bottomY))
         }
         

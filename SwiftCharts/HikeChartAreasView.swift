@@ -15,7 +15,7 @@ class HikeChartAreasView: UIView {
     private let color: UIColor
     private let animDelay: Float
     
-    public init(points: [CGPoint], frame: CGRect, color: UIColor, animDuration: Float, animDelay: Float) {
+    internal init(points: [CGPoint], frame: CGRect, color: UIColor, animDuration: Float, animDelay: Float) {
         self.color = color
         self.animDuration = animDuration
         self.animDelay = animDelay
@@ -27,7 +27,7 @@ class HikeChartAreasView: UIView {
         self.show(path: AreaCubicLinePathGenerator(tension1: 0.3, tension2: 0.3).generatePath(points: points, lineWidth: 1))
     }
     
-    required public init(coder aDecoder: NSCoder) {
+    required internal init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
