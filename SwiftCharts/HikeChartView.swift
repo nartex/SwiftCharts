@@ -33,6 +33,7 @@ public class HikeChartView: UIView {
         self.hikeChartAxisSettings = hikeChartAxisSettings
         super.init(frame: frame)
         
+        self.autoresizingMask = [UIViewAutoresizing.FlexibleWidth, UIViewAutoresizing.FlexibleHeight]
         chartInit()
     }
     

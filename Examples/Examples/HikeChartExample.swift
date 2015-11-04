@@ -39,10 +39,10 @@ class HikeChartExample: UIViewController {
         dataSets.append(HikeChartDataSet(withPoints: HikeChartPoint.generateRandomPointArray(4), andColor: UIColor(netHex: 0xE91E63)))
         dataSets.append(HikeChartDataSet(withPoints: HikeChartPoint.generateRandomPointArray(4), andColor: UIColor(netHex: 0xF44336)))
         */
+        
         let hikeChartAxisSettings = HikeChartAxisSettings(xAxisTitle: "Distance", yAxisTitle: "Altitude", xAxisShortTitle: "Dist.", yAxisShortTitle: "Alt.", xAxisUnitOfMeasurement: "m", yAxisUnitOfMeasurement: "m")
         
         superAwsomeHikeChartView = HikeChartView(frame: view.frame, dataSets: dataSets, hikeChartAxisSettings: hikeChartAxisSettings)
-        superAwsomeHikeChartView?.autoresizingMask = [UIViewAutoresizing.FlexibleWidth, UIViewAutoresizing.FlexibleHeight]
         
         view.addSubview(superAwsomeHikeChartView!)
     }
