@@ -47,11 +47,12 @@ public struct HikeChartPointsLineTrackerLayerSettings {
 
 class HikeChartPointsLineTrackerLayer<T: ChartPoint>: ChartPointsLayer<T> {
     
-    var altitudes = [Double]()
+    var altitudes = [Double?]()
     
     var previousAltitudesCount = 0
     
     let dataSets: [HikeChartDataSet]
+    let hikeChartAxisSettings: HikeChartAxisSettings
     
     private let lineColor: UIColor
     private let animDuration: Float
@@ -66,44 +67,99 @@ class HikeChartPointsLineTrackerLayer<T: ChartPoint>: ChartPointsLayer<T> {
         return currentPositionLineOverlay
     }()
     
-    private lazy var thumb: UIView = {
+    private var thumbs = [UIView]()
+    
+    private func generateThumb() -> UIView {
         let thumb = UIView()
         thumb.layer.cornerRadius = self.settings.thumbCornerRadius
         thumb.layer.borderWidth = self.settings.thumbBorderWidth
         thumb.layer.backgroundColor = UIColor.clearColor().CGColor
         thumb.layer.borderColor = self.settings.thumbBorderColor.CGColor
-        thumb.alpha = 0
+        thumb.alpha = 1
         return thumb
-    }()
+    }
     
-    private lazy var thumb2: UIView = {
-        let thumb = UIView()
-        thumb.layer.cornerRadius = self.settings.thumbCornerRadius
-        thumb.layer.borderWidth = self.settings.thumbBorderWidth
-        thumb.layer.backgroundColor = UIColor.clearColor().CGColor
-        thumb.layer.borderColor = self.settings.thumbBorderColor.CGColor
-        thumb.alpha = 0
-        return thumb
-    }()
+    private func showThumb(atIndex index: Int) {
+        if self.thumbs[index].alpha != 1 {
+            UIView.animateWithDuration(0.4,
+                animations: { () -> Void in
+                    self.thumbs[index].alpha = 1
+            })
+        }
+    }
     
+    private func hideThumb(atIndex index: Int) {
+        if self.thumbs[index].alpha != 0 {
+            UIView.animateWithDuration(0.2,
+                animations: { () -> Void in
+                    self.thumbs[index].alpha = 0
+            })
+        }
+    }
+    
+    private func showInfoLabelOverlay(atIndex index: Int) {
+        if self.currentInfoLabelOverlaysHeightConstraints[index]?.constant != CGFloat(self.settings.infoViewLabelDefaultHeight) {
+            UIView.animateWithDuration(0.3,
+                animations: { () -> Void in
+                    self.currentInfoLabelOverlaysHeightConstraints[index]?.constant = CGFloat(self.settings.infoViewLabelDefaultHeight)
+                    self.currentInfoLabelOverlays[index].alpha = 1
+            })
+        }
+    }
+    
+    private func hideInfoLabelOverlay(atIndex index: Int) {
+        if self.currentInfoLabelOverlaysHeightConstraints[index]?.constant != 0 {
+            UIView.animateWithDuration(0.3,
+                animations: { () -> Void in
+                    self.currentInfoLabelOverlaysHeightConstraints[index]?.constant = 0
+                    self.currentInfoLabelOverlays[index].alpha = 0
+            })
+        }
+    }
+    
+    private var intersections = [CGPoint?]()
     private var currentInfoLabelOverlays = [UILabel]()
+    private var currentInfoLabelOverlaysHeightConstraints = [NSLayoutConstraint?]()
     private let currentDistanceLabelOverlay: UILabel
     
     private var currentPositionInfoOverlay: UIView?
+    private var currentPositionInfoOverlayPosition: NSLayoutConstraint?
     
     private var view: TrackerView?
     
-    internal init(xAxis: ChartAxisLayer, yAxis: ChartAxisLayer, innerFrame: CGRect, chartPoints: [T], lineColor: UIColor, animDuration: Float, animDelay: Float, settings: HikeChartPointsLineTrackerLayerSettings, dataSets: [HikeChartDataSet]) {
+    private var chartFrameWidth: CGFloat?
+    private var leftAxisWidth: CGFloat?
+    
+    private func numberOfIntersection() -> Int {
+        var count = 0
+        for intersection in intersections {
+            if intersection != nil {
+                count++
+            }
+        }
+        return count
+    }
+    
+    internal init(xAxis: ChartAxisLayer, yAxis: ChartAxisLayer, innerFrame: CGRect, chartPoints: [T], lineColor: UIColor, animDuration: Float, animDelay: Float, settings: HikeChartPointsLineTrackerLayerSettings, dataSets: [HikeChartDataSet], hikeChartAxisSettings: HikeChartAxisSettings) {
         self.lineColor = lineColor
         self.animDuration = animDuration
         self.animDelay = animDelay
         self.settings = settings
         self.dataSets = dataSets
+        self.hikeChartAxisSettings = hikeChartAxisSettings
         
         self.currentDistanceLabelOverlay = UILabel(frame: CGRect(x: settings.infoViewLabelDefaultMargin, y: settings.infoViewLabelDefaultMargin, width: settings.infoViewLabelDefaultWidth, height: settings.infoViewLabelDefaultHeight))
         self.currentDistanceLabelOverlay.textColor = UIColor.whiteColor()
         
         super.init(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints)
+        
+        for dataSet in dataSets {
+            thumbs.append(generateThumb())
+            currentInfoLabelOverlays.append(generateInfoLabelOverlay(dataSet.color))
+            altitudes.append(nil)
+            intersections.append(nil)
+            currentInfoLabelOverlaysHeightConstraints.append(nil)
+        }
     }
     
     private func generateInfoLabelOverlay(color: UIColor) -> UILabel {
@@ -113,8 +169,11 @@ class HikeChartPointsLineTrackerLayer<T: ChartPoint>: ChartPointsLayer<T> {
         var alpha : CGFloat = 0
         
         let label = UILabel(frame: CGRect(x: settings.infoViewLabelDefaultMargin, y: settings.infoViewLabelDefaultMargin + (((currentInfoLabelOverlays.count) + 1) * settings.infoViewLabelDefaultHeight), width: settings.infoViewLabelDefaultWidth, height: settings.infoViewLabelDefaultHeight))
+        
         color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
         label.textColor = UIColor(hue: hue, saturation: saturation * 0.75, brightness: brightness, alpha: alpha)
+        label.shadowColor = UIColor.blackColor()
+        label.shadowOffset = CGSize(width: 0.0, height: 1.5)
         label.alpha = 1
         return label
     }
@@ -179,21 +238,6 @@ class HikeChartPointsLineTrackerLayer<T: ChartPoint>: ChartPointsLayer<T> {
         return currentPositionInfoOverlay
     }
     
-    /*private func createCurrentPositionInfoOverlay(view view: UIView) -> UILabel {
-        let currentPosW: CGFloat = CGFloat(self.settings.infoViewLabelDefaultWidth)
-        let currentPosH: CGFloat = CGFloat(self.settings.infoViewLabelDefaultHeight)
-        let currentPosX: CGFloat = (view.frame.size.width - currentPosW) / CGFloat(2)
-        let currentPosY: CGFloat = 20
-        let currentPositionInfoOverlay = UILabel(frame: CGRectMake(currentPosX, currentPosY, currentPosW, currentPosH))
-        currentPositionInfoOverlay.textColor = self.settings.infoViewFontColor
-        currentPositionInfoOverlay.layer.borderWidth = 1
-        currentPositionInfoOverlay.textAlignment = NSTextAlignment.Center
-        currentPositionInfoOverlay.layer.backgroundColor = UIColor.whiteColor().CGColor
-        currentPositionInfoOverlay.layer.borderColor = UIColor.grayColor().CGColor
-        currentPositionInfoOverlay.alpha = 0
-        return currentPositionInfoOverlay
-    }*/
-    
     private func currentPositionInfoOverlay(view view: UIView) -> UIView {
         return self.currentPositionInfoOverlay ?? {
             let currentPositionInfoOverlay = self.createCurrentPositionInfoOverlayLabelForDistance(view: view)
@@ -214,90 +258,6 @@ class HikeChartPointsLineTrackerLayer<T: ChartPoint>: ChartPointsLayer<T> {
         
         self.updateTrackerLineOnValidState{(view) in
             
-            let touchlineP1 = CGPointMake(touchPoint.x, 0)
-            let touchlineP2 = CGPointMake(touchPoint.x, view.frame.size.height)
-            
-            var intersections = [CGPoint]()
-            var intersectionsDataSetReference = [Int]()
-            var positionInDataSets: Int = 0
-            
-            for i in 0..<(self.chartPointsModels.count - 1) {
-                let m1 = self.chartPointsModels[i]
-                let m2 = self.chartPointsModels[i + 1]
-                if m1.chartPoint.x.scalar <= m2.chartPoint.x.scalar {
-                    if let intersection = self.linesIntersection(line1P1: touchlineP1, line1P2: touchlineP2, line2P1: m1.screenLoc, line2P2: m2.screenLoc) {
-                        intersections.append(intersection)
-                        intersectionsDataSetReference.append(positionInDataSets)
-                    }
-                } else {
-                    positionInDataSets++
-                }
-            }
-            
-            // Select point with smallest distance to touch point.
-            // If there's only one intersection, returns intersection. If there's no intersection returns nil.
-            /*
-            
-            var intersectionMaybe: CGPoint? = {
-            var minDistancePoint: (distance: Float, point: CGPoint?) = (MAXFLOAT, nil)
-            for intersection in intersections {
-            let distance = hypotf(Float(intersection.x - touchPoint.x), Float(intersection.y - touchPoint.y))
-            if distance < minDistancePoint.0 {
-            minDistancePoint = (distance, intersection)
-            }
-            }
-            return minDistancePoint.point
-            }()
-            
-            */
-            
-            var w: CGFloat = self.settings.thumbSize
-            var h: CGFloat = self.settings.thumbSize
-            
-            //Make all of this dirty code adapt for any number of intersections
-            if intersections.count > 0 {
-                if self.currentPositionInfoOverlay?.superview == nil {
-                    view.addSubview(self.currentPositionLineOverlay)
-                    view.addSubview(self.currentPositionInfoOverlay(view: view))
-                    self.currentPositionInfoOverlay?.addSubview(self.currentDistanceLabelOverlay)
-                    view.addSubview(self.thumb)
-                    view.addSubview(self.thumb2)
-                }
-                
-                UIView.animateWithDuration(0.3, animations: { () -> Void in
-                    self.currentPositionInfoOverlay!.alpha = 1
-                    self.currentPositionLineOverlay.alpha = 1
-                })
-            }
-            
-            UIView.animateWithDuration(0.3, animations: { () -> Void in
-                self.defineInfoOverlayHeightDependingOn(intersections.count)
-            })
-            
-            if intersections.count == 0 {
-                UIView.animateWithDuration(0.3, animations: { () -> Void in
-                    self.thumb.alpha = 0
-                    self.thumb2.alpha = 0
-                    self.currentPositionInfoOverlay!.alpha = 0
-                    self.currentPositionLineOverlay.alpha = 0
-                })
-                return
-            }
-            
-            if intersections.count == 1 {
-                UIView.animateWithDuration(0.3, animations: { () -> Void in
-                    self.thumb.alpha = 1
-                    self.thumb2.alpha = 0
-                })
-            }
-            
-            if intersections.count == 2 {
-                UIView.animateWithDuration(0.3, animations: { () -> Void in
-                    self.thumb.alpha = 1
-                    self.thumb2.alpha = 1
-                })
-            }
-            
             // Calculate scalar corresponding to intersection screen location along axis
             func scalar(axis: ChartAxisLayer, intersection: CGFloat) -> Double {
                 let s1 = axis.axisValues[0].scalar
@@ -310,40 +270,218 @@ class HikeChartPointsLineTrackerLayer<T: ChartPoint>: ChartPointsLayer<T> {
                 return sl * Double(factor) + Double(s1)
             }
             
+            let w: CGFloat = self.settings.thumbSize
+            let h: CGFloat = self.settings.thumbSize
+            
+            let touchlineP1 = CGPointMake(touchPoint.x, 0)
+            let touchlineP2 = CGPointMake(touchPoint.x, view.frame.size.height)
+            
+            var positionInDataSets: Int = 0
+            
+            for intersectionIndex in 0..<self.intersections.count {
+                self.intersections[intersectionIndex] = nil
+            }
+            
+            for i in 0..<(self.chartPointsModels.count - 1) {
+                let m1 = self.chartPointsModels[i]
+                let m2 = self.chartPointsModels[i + 1]
+                if m1.chartPoint.x.scalar <= m2.chartPoint.x.scalar {
+                    if let intersection = self.linesIntersection(line1P1: touchlineP1, line1P2: touchlineP2, line2P1: m1.screenLoc, line2P2: m2.screenLoc) {
+                        self.intersections[positionInDataSets] = intersection
+                        self.altitudes[positionInDataSets] = scalar(self.yAxis, intersection: intersection.y)
+                    }
+                } else {
+                    positionInDataSets++
+                }
+            }
+            
+            if self.currentPositionInfoOverlay?.superview == nil {
+                view.addSubview(self.currentPositionLineOverlay)
+                view.addSubview(self.currentPositionInfoOverlay(view: view))
+                
+                for thumb in self.thumbs {
+                    self.view?.addSubview(thumb)
+                }
+                
+                for infoLabelOverlay in self.currentInfoLabelOverlays {
+                    self.currentPositionInfoOverlay?.addSubview(infoLabelOverlay)
+                }
+                
+                self.currentPositionInfoOverlay?.addSubview(self.currentDistanceLabelOverlay)
+                
+                let baseView = self.view?.superview?.superview as? HikeChartView
+                self.leftAxisWidth = baseView?.coordsSpace?.yAxis.rect.width
+                self.chartFrameWidth = (baseView?.bounds.size.width)! - self.leftAxisWidth!
+                
+                self.currentPositionInfoOverlayPosition = NSLayoutConstraint(
+                    item: self.currentPositionInfoOverlay!,
+                    attribute: .CenterX,
+                    relatedBy: .Equal,
+                    toItem: self.currentPositionInfoOverlay!.superview,
+                    attribute: .Trailing,
+                    multiplier: 1,
+                    constant: self.computeNewCurrentPositionInfoOverlayPosition(true))
+                self.currentPositionInfoOverlay?.superview!.addConstraint(self.currentPositionInfoOverlayPosition!)
+                
+                self.currentPositionInfoOverlay?.superview!.addConstraint(NSLayoutConstraint(
+                    item: self.currentPositionInfoOverlay!,
+                    attribute: .Top,
+                    relatedBy: .Equal,
+                    toItem: self.currentPositionInfoOverlay!.superview,
+                    attribute: .Top,
+                    multiplier: 1,
+                    constant: 20))
+                
+                self.currentPositionInfoOverlay?.addConstraint(NSLayoutConstraint(
+                    item: self.currentPositionInfoOverlay!,
+                    attribute: .Leading,
+                    relatedBy: .Equal,
+                    toItem: self.currentDistanceLabelOverlay,
+                    attribute: .Leading,
+                    multiplier: 1,
+                    constant: -CGFloat(self.settings.infoViewLabelDefaultMargin)))
+                
+                self.currentPositionInfoOverlay?.addConstraint(NSLayoutConstraint(
+                    item: self.currentPositionInfoOverlay!,
+                    attribute: .Trailing,
+                    relatedBy: .Equal,
+                    toItem: self.currentDistanceLabelOverlay,
+                    attribute: .Trailing,
+                    multiplier: 1,
+                    constant: CGFloat(self.settings.infoViewLabelDefaultMargin)))
+                
+                self.currentPositionInfoOverlay?.addConstraint(NSLayoutConstraint(
+                    item: self.currentPositionInfoOverlay!,
+                    attribute: .Top,
+                    relatedBy: .Equal,
+                    toItem: self.currentDistanceLabelOverlay,
+                    attribute: .Top,
+                    multiplier: 1,
+                    constant: -CGFloat(self.settings.infoViewLabelDefaultMargin)))
+                
+                self.currentPositionInfoOverlay?.addConstraint(NSLayoutConstraint(
+                    item: self.currentDistanceLabelOverlay,
+                    attribute: .Height,
+                    relatedBy: .Equal,
+                    toItem: nil,
+                    attribute: .NotAnAttribute,
+                    multiplier: 1,
+                    constant: CGFloat(self.settings.infoViewLabelDefaultHeight)))
+                
+                self.currentDistanceLabelOverlay.translatesAutoresizingMaskIntoConstraints = false
+                self.currentPositionInfoOverlay!.translatesAutoresizingMaskIntoConstraints = false
+                
+                for currentLabelIndex in 0..<self.currentInfoLabelOverlays.count {
+                    let label = self.currentInfoLabelOverlays[currentLabelIndex]
+                    var previousLabel: UILabel? = nil
+                    if currentLabelIndex > 0 {
+                        previousLabel = self.currentInfoLabelOverlays[currentLabelIndex - 1]
+                    }
+                    
+                    if previousLabel != nil {
+                        self.currentPositionInfoOverlay?.addConstraint(NSLayoutConstraint(
+                            item: label,
+                            attribute: .Top,
+                            relatedBy: .Equal,
+                            toItem: previousLabel,
+                            attribute: .Bottom,
+                            multiplier: 1,
+                            constant: 0))
+                    } else {
+                        self.currentPositionInfoOverlay?.addConstraint(NSLayoutConstraint(
+                            item: label,
+                            attribute: .Top,
+                            relatedBy: .Equal,
+                            toItem: self.currentDistanceLabelOverlay,
+                            attribute: .Bottom,
+                            multiplier: 1,
+                            constant: 0))
+                    }
+                    
+                    if currentLabelIndex == self.currentInfoLabelOverlays.count - 1 {
+                        self.currentPositionInfoOverlay?.addConstraint(NSLayoutConstraint(
+                            item: self.currentPositionInfoOverlay!,
+                            attribute: .Bottom,
+                            relatedBy: .Equal,
+                            toItem: label,
+                            attribute: .Bottom,
+                            multiplier: 1,
+                            constant: CGFloat(self.settings.infoViewLabelDefaultMargin)))
+                    }
+                    
+                    self.currentPositionInfoOverlay?.addConstraint(NSLayoutConstraint(
+                        item: self.currentPositionInfoOverlay!,
+                        attribute: .Leading,
+                        relatedBy: .Equal,
+                        toItem: label,
+                        attribute: .Leading,
+                        multiplier: 1,
+                        constant: -CGFloat(self.settings.infoViewLabelDefaultMargin)))
+                    
+                    self.currentPositionInfoOverlay?.addConstraint(NSLayoutConstraint(
+                        item: self.currentPositionInfoOverlay!,
+                        attribute: .Trailing,
+                        relatedBy: .Equal,
+                        toItem: label,
+                        attribute: .Trailing,
+                        multiplier: 1,
+                        constant: CGFloat(self.settings.infoViewLabelDefaultMargin)))
+                    
+                    self.currentInfoLabelOverlaysHeightConstraints[currentLabelIndex] = NSLayoutConstraint(
+                        item: label,
+                        attribute: .Height,
+                        relatedBy: .Equal,
+                        toItem: nil,
+                        attribute: .NotAnAttribute,
+                        multiplier: 1,
+                        constant: CGFloat(self.settings.infoViewLabelDefaultHeight))
+                    
+                    self.currentInfoLabelOverlays[currentLabelIndex].addConstraint(self.currentInfoLabelOverlaysHeightConstraints[currentLabelIndex]!)
+                    
+                    label.translatesAutoresizingMaskIntoConstraints = false
+                }
+            }
+            
+            //Make all of this dirty code adapt for any number of intersections
+            if self.numberOfIntersection() > 0 {
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
+                    self.currentPositionInfoOverlay!.alpha = 1
+                    self.currentPositionLineOverlay.alpha = 1
+                })
+                
+            } else {
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
+                    self.currentPositionInfoOverlay!.alpha = 0
+                    self.currentPositionLineOverlay.alpha = 0
+                    
+                    for thumbIndex in 0..<self.thumbs.count {
+                        self.hideThumb(atIndex: thumbIndex)
+                    }
+                })
+                return
+            }
+            
             var distance: Double?
             
             if self.chartPointsModels.count > 1 {
                 distance = scalar(self.xAxis, intersection: touchPoint.x)
             }
             
-            self.altitudes.removeAll()
-            var counter = 0
-            for intersection: CGPoint in intersections {
-                self.currentPositionLineOverlay.frame = CGRectMake(intersection.x, 0, 1, view.frame.size.height)
-                
-                if counter == 0 {
-                    self.thumb.frame = CGRectMake(intersection.x - w/2, intersection.y - h/2, w, h)
-                } else if counter == 1 {
-                    self.thumb2.frame = CGRectMake(intersection.x - w/2, intersection.y - h/2, w, h)
+            for intersectionIndex in 0..<self.intersections.count {
+                let intersection = self.intersections[intersectionIndex]
+                if intersection != nil {
+                    self.showThumb(atIndex: intersectionIndex)
+                    self.showInfoLabelOverlay(atIndex: intersectionIndex)
+                    self.thumbs[intersectionIndex].frame = CGRectMake(intersection!.x - w/2, intersection!.y - h/2, w, h)
+                    self.currentPositionLineOverlay.frame = CGRectMake(intersection!.x, 0, 1, view.frame.size.height)
+                } else {
+                    self.hideThumb(atIndex: intersectionIndex)
+                    self.hideInfoLabelOverlay(atIndex: intersectionIndex)
                 }
-                
-                if self.chartPointsModels.count > 1 {
-                    self.altitudes.append(scalar(self.yAxis, intersection: intersection.y))
-                }
-                
-                counter++
             }
             
-            let baseView = self.view?.superview?.superview as? HikeChartView
-            let leftAxisWidth = baseView?.coordsSpace?.yAxis.rect.width
-            let chartFrameWidth = (baseView?.bounds.size.width)! - leftAxisWidth!
-            
-            self.displayInfo(distance!, altitudes: self.altitudes, altitudesDataSet: intersectionsDataSetReference, fingerIsOnTheLeft: touchPoint.x < (chartFrameWidth / 2) + leftAxisWidth!)
+            self.displayInfo(distance!, altitudes: self.altitudes, fingerIsOnTheLeft: touchPoint.x < (self.chartFrameWidth! / 2) + self.leftAxisWidth!)
         }
-    }
-    
-    func defineInfoOverlayHeightDependingOn(numberOfIntersetion: Int) {
-        currentPositionInfoOverlay?.frame.size.height = CGFloat(settings.infoViewLabelDefaultHeight * (numberOfIntersetion + 1) + (settings.infoViewLabelDefaultMargin * 2))
     }
     
     override func display(chart chart: Chart) {
@@ -357,40 +495,30 @@ class HikeChartPointsLineTrackerLayer<T: ChartPoint>: ChartPointsLayer<T> {
         self.view = view
     }
     
-    func displayInfo(distance: Double, altitudes: [Double], altitudesDataSet: [Int], fingerIsOnTheLeft: Bool = false) {
-        setCurrentPositionInfoOverlay(fingerIsOnTheLeft)
-        self.currentDistanceLabelOverlay.text = "Dist. " + String(Int(distance)) + "m"
+    func displayInfo(distance: Double, altitudes: [Double?], fingerIsOnTheLeft: Bool = false) {
+        UIView.animateWithDuration(0.4, animations: { () -> Void in
+            self.currentPositionInfoOverlayPosition?.constant = self.computeNewCurrentPositionInfoOverlayPosition(fingerIsOnTheLeft)
+            self.view?.layoutIfNeeded()
+        })
+        self.currentDistanceLabelOverlay.text = hikeChartAxisSettings.xAxisShortTitle + " : " + String(Int(distance)) + hikeChartAxisSettings.xAxisUnitOfMeasurement
         
-        for altLabel: UILabel in currentInfoLabelOverlays {
-            altLabel.removeFromSuperview()
-        }
-        currentInfoLabelOverlays.removeAll()
-        
-        var dataSetReference = 0
-        for altitude in altitudes {
-            currentInfoLabelOverlays.append(generateInfoLabelOverlay(dataSets[dataSetReference].color))
-            currentInfoLabelOverlays[dataSetReference].text = "Alt. " + String(Int(altitude)) + "m"
-            
-            currentPositionInfoOverlay?.addSubview(currentInfoLabelOverlays[dataSetReference])
-            dataSetReference++
+        for dataSetIndex in 0..<altitudes.count {
+            if altitudes[dataSetIndex] != nil {
+                currentInfoLabelOverlays[dataSetIndex].text = hikeChartAxisSettings.yAxisShortTitle + " : " + String(Int(altitudes[dataSetIndex]!)) + hikeChartAxisSettings.yAxisUnitOfMeasurement
+            }
         }
         
         previousAltitudesCount = altitudes.count
     }
     
-    func setCurrentPositionInfoOverlay(left: Bool) {
-        let baseView = self.view?.superview?.superview as? HikeChartView
-        let leftAxisWidth = baseView?.coordsSpace?.yAxis.rect.width
-        let chartFrameWidth = (baseView?.bounds.size.width)! - leftAxisWidth!
+    func computeNewCurrentPositionInfoOverlayPosition(left: Bool) -> CGFloat {
         let infoOverlayWidth = (currentPositionInfoOverlay?.bounds.size.width)!
-        var newPositionCenter = chartFrameWidth * 0.25
-        if left {
-            newPositionCenter = chartFrameWidth * 0.75
+        var newPositionCenter = chartFrameWidth! * 0.25
+        if !left {
+            newPositionCenter = chartFrameWidth! * 0.75
         }
         
-        UIView.animateWithDuration(0.4, animations: { () -> Void in
-            self.currentPositionInfoOverlay?.frame.origin.x = (newPositionCenter - (infoOverlayWidth / 2)) + leftAxisWidth!
-        })
+        return -((newPositionCenter - (infoOverlayWidth / 2)) + leftAxisWidth!)
     }
 }
 

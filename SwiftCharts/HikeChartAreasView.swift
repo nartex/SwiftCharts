@@ -22,33 +22,11 @@ public class HikeChartAreasView: UIView {
         super.init(frame: frame)
         
         self.backgroundColor = UIColor.clearColor()
-        //self.show(path: self.generateAreaPath(points: points))
         self.show(path: AreaCubicLinePathGenerator(tension1: 0.3, tension2: 0.3).generatePath(points: points, lineWidth: 1))
     }
     
     required public init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func generateAreaPath(points points: [CGPoint]) -> UIBezierPath {
-        
-        let progressline = UIBezierPath()
-        progressline.lineWidth = 1.0
-        progressline.lineCapStyle = .Round
-        progressline.lineJoinStyle = .Round
-        
-        if let p = points.first {
-            progressline.moveToPoint(p)
-        }
-        
-        for i in 1..<points.count {
-            let p = points[i]
-            progressline.addLineToPoint(p)
-        }
-        
-        progressline.closePath()
-        
-        return progressline
     }
     
     private func show(path path: UIBezierPath) {

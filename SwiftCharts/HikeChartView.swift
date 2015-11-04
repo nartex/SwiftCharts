@@ -14,8 +14,7 @@ public class HikeChartView: UIView {
     var chart: Chart?
     var axisColor = UIColor.blackColor()
     
-    var xAxisTitle = "Distance"
-    var yAxisTitle = "Altitude"
+    let hikeChartAxisSettings: HikeChartAxisSettings
     
     var coordsSpace: ChartCoordsSpaceLeftBottomSingleAxis?
     
@@ -29,8 +28,9 @@ public class HikeChartView: UIView {
         super.awakeFromNib()
     }
     
-    required public init(frame: CGRect, dataSets: [HikeChartDataSet]) {
+    required public init(frame: CGRect, dataSets: [HikeChartDataSet], hikeChartAxisSettings: HikeChartAxisSettings) {
         self.dataSets = dataSets
+        self.hikeChartAxisSettings = hikeChartAxisSettings
         super.init(frame: frame)
         
         chartInit()
@@ -58,8 +58,8 @@ public class HikeChartView: UIView {
             let xValues = xMin?.stride(through: xMax!, by: (xMax! - xMin!) / 5).map({ChartAxisValueFloat(CGFloat($0), labelSettings: labelSettings)})
             let yValues = ChartAxisValuesGenerator.generateYAxisValuesWithChartPoints(chartPoints, minSegmentCount: 5, maxSegmentCount: 8, axisValueGenerator: {ChartAxisValueDouble($0, labelSettings: HikeChartSettings.labelSettings)}, addPaddingSegmentIfEdge: true)
             
-            let xModel = ChartAxisModel(axisValues: xValues!, lineColor: self.axisColor, axisTitleLabel: ChartAxisLabel(text: self.xAxisTitle, settings: HikeChartSettings.labelSettings))
-            let yModel = ChartAxisModel(axisValues: yValues, lineColor: self.axisColor, axisTitleLabel: ChartAxisLabel(text: self.yAxisTitle, settings: HikeChartSettings.labelSettings.defaultVertical()))
+            let xModel = ChartAxisModel(axisValues: xValues!, lineColor: self.axisColor, axisTitleLabel: ChartAxisLabel(text: self.hikeChartAxisSettings.xAxisTitle, settings: HikeChartSettings.labelSettings))
+            let yModel = ChartAxisModel(axisValues: yValues, lineColor: self.axisColor, axisTitleLabel: ChartAxisLabel(text: self.hikeChartAxisSettings.yAxisTitle, settings: HikeChartSettings.labelSettings.defaultVertical()))
             
             let chartFrame = HikeChartSettings.chartFrame(self.bounds)
             
@@ -68,38 +68,31 @@ public class HikeChartView: UIView {
             dispatch_async(dispatch_get_main_queue(), {
                 let (xAxis, yAxis, innerFrame) = (self.coordsSpace!.xAxis, self.coordsSpace!.yAxis, self.coordsSpace!.chartInnerFrame)
                 
-                // TODO: Make it a loop
-                var chartPointsAreaLayer1Points = [ChartPoint]()
-                chartPointsAreaLayer1Points.appendContentsOf(self.dataSets![0].points.map({$0.chartPoint!}))
-                chartPointsAreaLayer1Points.append(ChartPoint(x: self.dataSets![0].points.last!.chartPoint!.x, y: yAxis.axisValues[0]))
-                var chartPointsAreaLayer2Points = [ChartPoint]()
-                chartPointsAreaLayer2Points.appendContentsOf(self.dataSets![1].points.map({$0.chartPoint!}))
-                chartPointsAreaLayer2Points.append(ChartPoint(x: self.dataSets![1].points.last!.chartPoint!.x, y: yAxis.axisValues[0]))
+                var layers: [ChartLayer] = [
+                    xAxis,
+                    yAxis
+                ]
                 
-                let chartPointsAreaLayer1 = HikeChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPointsAreaLayer1Points, areaColor: self.dataSets![0].color.colorWithAlphaComponent(0.2), animDuration: 3, animDelay: 0, addContainerPoints: true)
-                let chartPointsAreaLayer2 = HikeChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPointsAreaLayer2Points, areaColor: self.dataSets![1].color.colorWithAlphaComponent(0.2), animDuration: 3, animDelay: 0, addContainerPoints: true)
+                for dataSet in self.dataSets! {
+                    var chartPointsAreaLayerPoints = [ChartPoint]()
+                    chartPointsAreaLayerPoints.appendContentsOf(dataSet.points.map({$0.chartPoint!}))
+                    chartPointsAreaLayerPoints.append(ChartPoint(x: dataSet.points.last!.chartPoint!.x, y: yAxis.axisValues[0]))
+                    let chartPointsAreaLayer = HikeChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPointsAreaLayerPoints, areaColor: dataSet.color.colorWithAlphaComponent(0.2), animDuration: 3, animDelay: 0, addContainerPoints: true)
+                    layers.append(chartPointsAreaLayer)
+                }
                 
                 let models = self.dataSets!.map({ChartLineModel(chartPoints: $0.points.map({$0.chartPoint!}), lineColor: $0.color, lineWidth: 4, animDuration: 1, animDelay: 0)})
                 
-                let chartPointsLineLayer = ChartPointsLineLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, lineModels: models, pathGenerator: CubicLinePathGenerator(tension1: 0.3, tension2: 0.3))
+                layers.append(ChartPointsLineLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, lineModels: models, pathGenerator: CubicLinePathGenerator(tension1: 0.3, tension2: 0.3)))
                 
                 let trackerLayerSettings = HikeChartPointsLineTrackerLayerSettings(thumbSize: HikeChartSettings.isPad ? 18 : 12, thumbCornerRadius: HikeChartSettings.isPad ? 9 : 6, thumbBorderWidth: HikeChartSettings.isPad ? 4 : 2)
                 
-                let chartPointsTrackerLayer1 = HikeChartPointsLineTrackerLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints, lineColor: UIColor.blackColor(), animDuration: 1, animDelay: 2, settings: trackerLayerSettings, dataSets: self.dataSets!)
-                //let chartPointsTrackerLayer2 = ChartPointsLineTrackerLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: self.dataSets![1].points.map({$0.chartPoint!}), lineColor: UIColor.blackColor(), animDuration: 1, animDelay: 2, settings: trackerLayerSettings)
+                layers.append(HikeChartPointsLineTrackerLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints, lineColor: UIColor.blackColor(), animDuration: 1, animDelay: 2, settings: trackerLayerSettings, dataSets: self.dataSets!, hikeChartAxisSettings: self.hikeChartAxisSettings))
                 
                 let settings = ChartGuideLinesLayerSettings(linesColor: UIColor.blackColor(), linesWidth: HikeChartSettings.guidelinesWidth)
-                let guidelinesLayer = ChartGuideLinesLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, axis: .Y, settings: settings)
+                layers.append(ChartGuideLinesLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, axis: .Y, settings: settings))
                 
-                let chart = Chart(frame: chartFrame, layers: [
-                    xAxis,
-                    yAxis,
-                    guidelinesLayer,
-                    chartPointsLineLayer,
-                    chartPointsAreaLayer1,
-                    chartPointsAreaLayer2,
-                    chartPointsTrackerLayer1
-                    ])
+                let chart = Chart(frame: chartFrame, layers: layers)
                 
                 for view in self.subviews {
                     view.removeFromSuperview()
