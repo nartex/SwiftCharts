@@ -33,15 +33,15 @@ public class ChartStackedBarModel: ChartBarModel {
 }
 
 
-class ChartStackedBarsViewGenerator<T: ChartStackedBarModel>: ChartBarsViewGenerator<T> {
+public class ChartStackedBarsViewGenerator<T: ChartStackedBarModel>: ChartBarsViewGenerator<T> {
     
     private typealias FrameBuilder = (barModel: ChartStackedBarModel, item: ChartStackedBarItemModel, currentTotalQuantity: Double) -> (frame: ChartPointViewBarStackedFrame, length: CGFloat)
     
-    override init(horizontal: Bool, xAxis: ChartAxisLayer, yAxis: ChartAxisLayer, chartInnerFrame: CGRect, barWidth barWidthMaybe: CGFloat?, barSpacing barSpacingMaybe: CGFloat?) {
+    public override init(horizontal: Bool, xAxis: ChartAxisLayer, yAxis: ChartAxisLayer, chartInnerFrame: CGRect, barWidth barWidthMaybe: CGFloat?, barSpacing barSpacingMaybe: CGFloat?) {
         super.init(horizontal: horizontal, xAxis: xAxis, yAxis: yAxis, chartInnerFrame: chartInnerFrame, barWidth: barWidthMaybe, barSpacing: barSpacingMaybe)
     }
     
-    override func generateView(barModel: T, constantScreenLoc constantScreenLocMaybe: CGFloat? = nil, bgColor: UIColor? = nil, animDuration: Float) -> ChartPointViewBar {
+    public override func generateView(barModel: T, constantScreenLoc constantScreenLocMaybe: CGFloat? = nil, bgColor: UIColor? = nil, animDuration: Float) -> ChartPointViewBar {
         
         let constantScreenLoc = constantScreenLocMaybe ?? self.constantScreenLoc(barModel)
         
@@ -93,13 +93,13 @@ class ChartStackedBarsViewGenerator<T: ChartStackedBarModel>: ChartBarsViewGener
 
 public class ChartStackedBarsLayer: ChartCoordsSpaceLayer {
     
-    private let barModels: [ChartStackedBarModel]
-    private let horizontal: Bool
+    public let barModels: [ChartStackedBarModel]
+    public let horizontal: Bool
     
-    private let barWidth: CGFloat?
-    private let barSpacing: CGFloat?
+    public let barWidth: CGFloat?
+    public let barSpacing: CGFloat?
     
-    private let animDuration: Float
+    public let animDuration: Float
     
     public convenience init(xAxis: ChartAxisLayer, yAxis: ChartAxisLayer, innerFrame: CGRect, barModels: [ChartStackedBarModel], horizontal: Bool = false, barWidth: CGFloat, animDuration: Float) {
         self.init(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, barModels: barModels, horizontal: horizontal, barWidth: barWidth, barSpacing: nil, animDuration: animDuration)
@@ -109,7 +109,7 @@ public class ChartStackedBarsLayer: ChartCoordsSpaceLayer {
         self.init(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, barModels: barModels, horizontal: horizontal, barWidth: nil, barSpacing: barSpacing, animDuration: animDuration)
     }
     
-    private init(xAxis: ChartAxisLayer, yAxis: ChartAxisLayer, innerFrame: CGRect, barModels: [ChartStackedBarModel], horizontal: Bool = false, barWidth: CGFloat? = nil, barSpacing: CGFloat?, animDuration: Float) {
+    public init(xAxis: ChartAxisLayer, yAxis: ChartAxisLayer, innerFrame: CGRect, barModels: [ChartStackedBarModel], horizontal: Bool = false, barWidth: CGFloat? = nil, barSpacing: CGFloat?, animDuration: Float) {
         self.barModels = barModels
         self.horizontal = horizontal
         self.barWidth = barWidth

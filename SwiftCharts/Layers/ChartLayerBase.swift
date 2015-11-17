@@ -9,7 +9,7 @@
 import UIKit
 
 // Convenience class to make protocol's methods optional
-public class ChartLayerBase: ChartLayer {
+public class ChartLayerBase: NSObject, ChartLayer {
 
     public func chartInitialized(chart chart: Chart) {}
     
