@@ -133,9 +133,9 @@ public class ChartLabelDrawer: ChartContextDrawer {
                 
                 // when the labels are diagonal we have to shift a little so they look aligned with axis value. We align origin of new rect with the axis value
                 if settings.shiftXOnRotation {
-                    var xOffset: CGFloat = abs(settings.rotation) == 90 ? 0 : centerX - newRect.origin.x
+                    var xOffset: CGFloat = abs(settings.rotation) == 90 ? 0 : centerX - newRect.origin.x - labelHalfHeight
                     if settings.rotation < 0 && settings.rotation > -90 {
-                        xOffset = centerX - newRect.origin.x - newRect.size.width
+                        xOffset = centerX - newRect.origin.x - newRect.size.width + labelHalfHeight
                     }
                     transform = CGAffineTransformTranslate(transform, xOffset, offsetTop)
                 }
