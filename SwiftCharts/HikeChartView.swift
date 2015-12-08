@@ -10,7 +10,11 @@ import UIKit
 
 public class HikeChartView: UIView {
     
-    var dataSets: [HikeChartDataSet]?
+    var dataSets: [HikeChartDataSet]? {
+        didSet{
+            reload()
+        }
+    }
     var chart: Chart?
     var axisColor = UIColor.blackColor()
     
@@ -20,12 +24,8 @@ public class HikeChartView: UIView {
     
     override public var frame: CGRect {
         didSet {
-            chartInit()
+            reload()
         }
-    }
-    
-    override public func awakeFromNib() {
-        super.awakeFromNib()
     }
     
     required public init(frame: CGRect, dataSets: [HikeChartDataSet], hikeChartAxisSettings: HikeChartAxisSettings) {
@@ -41,7 +41,11 @@ public class HikeChartView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func chartInit() {
+    public func reload() {
+        chartInit()
+    }
+    
+    private func chartInit() {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
             
             let labelSettings = ChartLabelSettings(font: HikeChartSettings.labelFont)
