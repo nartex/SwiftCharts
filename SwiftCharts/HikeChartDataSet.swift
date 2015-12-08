@@ -9,8 +9,8 @@
 import UIKit
 
 public class HikeChartDataSet: NSObject {
-    let points: [HikeChartPoint]
-    let color: UIColor
+    public let points: [HikeChartPoint]
+    public let color: UIColor
     
     required public init(withPoints points: [HikeChartPoint], andColor color: UIColor) {
         self.points = points
