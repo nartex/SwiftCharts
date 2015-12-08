@@ -52,7 +52,7 @@ public class HikeChartSettings: NSObject {
     }
     
     static func chartFrame(containerBounds: CGRect) -> CGRect {
-        return CGRectMake(0, 70, containerBounds.size.width, containerBounds.size.height - 70)
+        return CGRectMake(0, 0, containerBounds.size.width, containerBounds.size.height - 0)
     }
     
     static var labelSettings: ChartLabelSettings {
