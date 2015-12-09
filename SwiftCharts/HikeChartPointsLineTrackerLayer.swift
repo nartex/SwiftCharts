@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc public protocol HikeChartPointsLineTrackerLayerDelegate {
+protocol HikeChartPointsLineTrackerLayerDelegate {
     func touchesBegan(sender: AnyObject!)
     func touchesMoved(sender: AnyObject!)
     func touchesEnded(sender: AnyObject!)
