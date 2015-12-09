@@ -8,6 +8,12 @@
 
 import UIKit
 
+@objc public protocol HikeChartPointsLineTrackerLayerDelegate {
+    func touchesBegan(sender: AnyObject!)
+    func touchesMoved(sender: AnyObject!)
+    func touchesEnded(sender: AnyObject!)
+}
+
 public struct HikeChartPointsLineTrackerLayerSettings {
     let thumbSize: CGFloat
     let thumbCornerRadius: CGFloat
@@ -53,6 +59,8 @@ class HikeChartPointsLineTrackerLayer<T: ChartPoint>: ChartPointsLayer<T> {
     
     let dataSets: [HikeChartDataSet]
     let hikeChartAxisSettings: HikeChartAxisSettings
+    
+    var delegate: HikeChartPointsLineTrackerLayerDelegate?
     
     private let lineColor: UIColor
     private let animDuration: Float
@@ -490,6 +498,7 @@ class HikeChartPointsLineTrackerLayer<T: ChartPoint>: ChartPointsLayer<T> {
                 [weak self] location in
                 self?.updateTrackerLine(touchPoint: location)
             })
+        view.delegate = self
         view.userInteractionEnabled = true
         chart.addSubview(view)
         self.view = view
@@ -522,9 +531,42 @@ class HikeChartPointsLineTrackerLayer<T: ChartPoint>: ChartPointsLayer<T> {
     }
 }
 
+// MARK: TrackerViewDelegate
+
+extension HikeChartPointsLineTrackerLayer: TrackerViewDelegate {
+    private func touchesBegan(sender: TrackerView) {
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.touchesBegan(self)
+    }
+    
+    private func touchesMoved(sender: TrackerView) {
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.touchesMoved(self)
+    }
+    
+    private func touchesEnded(sender: TrackerView) {
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.touchesEnded(self)
+    }
+    
+}
+
+private protocol TrackerViewDelegate {
+    func touchesBegan(sender: TrackerView)
+    func touchesMoved(sender: TrackerView)
+    func touchesEnded(sender: TrackerView)
+}
+
 private class TrackerView: UIView {
     
     let updateFunc: ((CGPoint) -> ())?
+    var delegate: TrackerViewDelegate?
     
     init(frame: CGRect, updateFunc: (CGPoint) -> ()) {
         self.updateFunc = updateFunc
@@ -541,6 +583,11 @@ private class TrackerView: UIView {
         let location = touch.locationInView(self)
         
         self.updateFunc?(location)
+        
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.touchesBegan(self)
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -548,5 +595,17 @@ private class TrackerView: UIView {
         let location = touch.locationInView(self)
         
         self.updateFunc?(location)
+        
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.touchesMoved(self)
+    }
+    
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.touchesEnded(self)
     }
 }

@@ -8,7 +8,15 @@
 
 import UIKit
 
+@objc public protocol HikeChartViewDelegate {
+    func touchesBegan(sender: HikeChartView)
+    func touchesMoved(sender: HikeChartView)
+    func touchesEnded(sender: HikeChartView)
+}
+
 public class HikeChartView: UIView {
+    
+    public var delegate: HikeChartViewDelegate?
     
     var dataSets: [HikeChartDataSet]? {
         didSet{
@@ -92,7 +100,11 @@ public class HikeChartView: UIView {
                 
                 let trackerLayerSettings = HikeChartPointsLineTrackerLayerSettings(thumbSize: HikeChartSettings.isPad ? 18 : 12, thumbCornerRadius: HikeChartSettings.isPad ? 9 : 6, thumbBorderWidth: HikeChartSettings.isPad ? 4 : 2)
                 
-                layers.append(HikeChartPointsLineTrackerLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints, lineColor: UIColor.blackColor(), animDuration: 1, animDelay: 2, settings: trackerLayerSettings, dataSets: self.dataSets!, hikeChartAxisSettings: self.hikeChartAxisSettings))
+                let trackerLayer = HikeChartPointsLineTrackerLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints, lineColor: UIColor.blackColor(), animDuration: 1, animDelay: 2, settings: trackerLayerSettings, dataSets: self.dataSets!, hikeChartAxisSettings: self.hikeChartAxisSettings)
+                
+                trackerLayer.delegate = self
+                
+                layers.append(trackerLayer)
                 
                 let settings = ChartGuideLinesLayerSettings(linesColor: UIColor.blackColor(), linesWidth: HikeChartSettings.guidelinesWidth)
                 layers.append(ChartGuideLinesLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, axis: .Y, settings: settings))
@@ -107,5 +119,30 @@ public class HikeChartView: UIView {
                 self.chart = chart
             })
         })
+    }
+}
+
+// MARK: HikeChartViewDelegate
+
+extension HikeChartView: HikeChartPointsLineTrackerLayerDelegate {
+    public func touchesBegan(sender: AnyObject!) {
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.touchesBegan(self)
+    }
+    
+    public func touchesMoved(sender: AnyObject!) {
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.touchesMoved(self)
+    }
+    
+    public func touchesEnded(sender: AnyObject!) {
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.touchesEnded(self)
     }
 }

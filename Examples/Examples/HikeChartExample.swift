@@ -42,9 +42,28 @@ class HikeChartExample: UIViewController {
         
         let hikeChartAxisSettings = HikeChartAxisSettings(xAxisTitle: "Distance", yAxisTitle: "Altitude", xAxisShortTitle: "Dist.", yAxisShortTitle: "Alt.", xAxisUnitOfMeasurement: "m", yAxisUnitOfMeasurement: "m")
         
-        superAwsomeHikeChartView = HikeChartView(frame: view.frame, dataSets: dataSets, hikeChartAxisSettings: hikeChartAxisSettings)
+        superAwsomeHikeChartView = HikeChartView(frame: CGRect(x: 0, y: 0, width: 304, height: 171), dataSets: dataSets, hikeChartAxisSettings: hikeChartAxisSettings)
+        //superAwsomeHikeChartView = HikeChartView(frame: view.frame, dataSets: dataSets, hikeChartAxisSettings: hikeChartAxisSettings)
+        
+        superAwsomeHikeChartView?.delegate = self
         
         view.addSubview(superAwsomeHikeChartView!)
+    }
+}
+
+// MARK: HikeChartViewDelegate
+
+extension HikeChartExample: HikeChartViewDelegate {
+    func touchesBegan(sender: HikeChartView) {
+        print("Touches began")
+    }
+    
+    func touchesMoved(sender: HikeChartView) {
+        print("Touches moved")
+    }
+    
+    func touchesEnded(sender: HikeChartView) {
+        print("Touches ended")
     }
 }
 
