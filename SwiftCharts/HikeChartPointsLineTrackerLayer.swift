@@ -12,6 +12,7 @@ protocol HikeChartPointsLineTrackerLayerDelegate {
     func touchesBegan(sender: AnyObject!)
     func touchesMoved(sender: AnyObject!)
     func touchesEnded(sender: AnyObject!)
+    func touchesCancelled(sender: AnyObject!)
 }
 
 public struct HikeChartPointsLineTrackerLayerSettings {
@@ -555,12 +556,20 @@ extension HikeChartPointsLineTrackerLayer: TrackerViewDelegate {
         delegate.touchesEnded(self)
     }
     
+    private func touchesCancelled(sender: TrackerView) {
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.touchesCancelled(self)
+    }
+    
 }
 
 private protocol TrackerViewDelegate {
     func touchesBegan(sender: TrackerView)
     func touchesMoved(sender: TrackerView)
     func touchesEnded(sender: TrackerView)
+    func touchesCancelled(sender: TrackerView)
 }
 
 private class TrackerView: UIView {
@@ -607,5 +616,12 @@ private class TrackerView: UIView {
             return
         }
         delegate.touchesEnded(self)
+    }
+    
+    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.touchesCancelled(self)
     }
 }
