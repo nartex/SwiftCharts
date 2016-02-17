@@ -12,6 +12,7 @@ import UIKit
     func touchesBegan(sender: HikeChartView)
     func touchesMoved(sender: HikeChartView)
     func touchesEnded(sender: HikeChartView)
+    func touchesCancelled(sender: HikeChartView)
 }
 
 public class HikeChartView: UIView {
@@ -156,5 +157,12 @@ extension HikeChartView: HikeChartPointsLineTrackerLayerDelegate {
             return
         }
         delegate.touchesEnded(self)
+    }
+    
+    public func touchesCancelled(sender: AnyObject!) {
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.touchesCancelled(self)
     }
 }
