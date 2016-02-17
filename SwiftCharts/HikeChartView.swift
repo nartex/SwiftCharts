@@ -12,14 +12,13 @@ import UIKit
     func touchesBegan(sender: HikeChartView)
     func touchesMoved(sender: HikeChartView)
     func touchesEnded(sender: HikeChartView)
-    func touchesCancelled(sender: HikeChartView)
 }
 
 public class HikeChartView: UIView {
     
     public var delegate: HikeChartViewDelegate?
     
-    var dataSets: [HikeChartDataSet]? {
+    public var dataSets: [HikeChartDataSet]? {
         didSet{
             reload()
         }
@@ -30,6 +29,8 @@ public class HikeChartView: UIView {
     let hikeChartAxisSettings: HikeChartAxisSettings
     
     var coordsSpace: ChartCoordsSpaceLeftBottomSingleAxis?
+    
+    var showingEmptyChart = false
     
     override public var frame: CGRect {
         didSet {
@@ -55,6 +56,8 @@ public class HikeChartView: UIView {
     }
     
     private func chartInit() {
+        showingEmptyChart = false
+        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
             
             let labelSettings = ChartLabelSettings(font: HikeChartSettings.labelFont)
@@ -64,6 +67,12 @@ public class HikeChartView: UIView {
             for dataSet in self.dataSets! {
                 chartPoints.appendContentsOf(dataSet.points.map({$0.chartPoint!}))
             }
+            
+            self.showingEmptyChart = chartPoints.count <= 2
+            if self.showingEmptyChart {
+                chartPoints = [ChartPoint(x: ChartAxisValue(scalar: 0), y: ChartAxisValue(scalar: 0)), ChartPoint(x: ChartAxisValue(scalar: 1000), y: ChartAxisValue(scalar: 50))]
+            }
+            
             
             let xAllValues = chartPoints.map({Float($0.x.scalar)})
             let xMax = xAllValues.maxElement()
@@ -91,21 +100,23 @@ public class HikeChartView: UIView {
                     var chartPointsAreaLayerPoints = [ChartPoint]()
                     chartPointsAreaLayerPoints.appendContentsOf(dataSet.points.map({$0.chartPoint!}))
                     chartPointsAreaLayerPoints.append(ChartPoint(x: dataSet.points.last!.chartPoint!.x, y: yAxis.axisValues[0]))
-                    let chartPointsAreaLayer = HikeChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPointsAreaLayerPoints, areaColor: dataSet.color.colorWithAlphaComponent(0.2), animDuration: 3, animDelay: 0, addContainerPoints: true)
+                    let chartPointsAreaLayer = HikeChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPointsAreaLayerPoints, areaColor: self.showingEmptyChart ? UIColor.clearColor() : dataSet.color.colorWithAlphaComponent(0.2), animDuration: 3, animDelay: 0, addContainerPoints: true)
                     layers.append(chartPointsAreaLayer)
                 }
                 
-                let models = self.dataSets!.map({ChartLineModel(chartPoints: $0.points.map({$0.chartPoint!}), lineColor: $0.color, lineWidth: 4, animDuration: 1, animDelay: 0)})
+                let models = self.dataSets!.map({ChartLineModel(chartPoints: $0.points.map({$0.chartPoint!}), lineColor: self.showingEmptyChart ? UIColor.clearColor() : $0.color, lineWidth: 4, animDuration: 1, animDelay: 0)})
                 
                 layers.append(ChartPointsLineLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, lineModels: models, pathGenerator: CubicLinePathGenerator(tension1: 0.3, tension2: 0.3)))
                 
-                let trackerLayerSettings = HikeChartPointsLineTrackerLayerSettings(thumbSize: HikeChartSettings.isPad ? 18 : 12, thumbCornerRadius: HikeChartSettings.isPad ? 9 : 6, thumbBorderWidth: HikeChartSettings.isPad ? 4 : 2)
-                
-                let trackerLayer = HikeChartPointsLineTrackerLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints, lineColor: UIColor.blackColor(), animDuration: 1, animDelay: 2, settings: trackerLayerSettings, dataSets: self.dataSets!, hikeChartAxisSettings: self.hikeChartAxisSettings)
-                
-                trackerLayer.delegate = self
-                
-                layers.append(trackerLayer)
+                if !self.showingEmptyChart {
+                    let trackerLayerSettings = HikeChartPointsLineTrackerLayerSettings(thumbSize: HikeChartSettings.isPad ? 18 : 12, thumbCornerRadius: HikeChartSettings.isPad ? 9 : 6, thumbBorderWidth: HikeChartSettings.isPad ? 4 : 2)
+                    
+                    let trackerLayer = HikeChartPointsLineTrackerLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints, lineColor: UIColor.blackColor(), animDuration: 1, animDelay: 2, settings: trackerLayerSettings, dataSets: self.dataSets!, hikeChartAxisSettings: self.hikeChartAxisSettings)
+                    
+                    trackerLayer.delegate = self
+                    
+                    layers.append(trackerLayer)
+                }
                 
                 let settings = ChartGuideLinesLayerSettings(linesColor: UIColor.blackColor(), linesWidth: HikeChartSettings.guidelinesWidth)
                 layers.append(ChartGuideLinesLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, axis: .Y, settings: settings))
@@ -145,12 +156,5 @@ extension HikeChartView: HikeChartPointsLineTrackerLayerDelegate {
             return
         }
         delegate.touchesEnded(self)
-    }
-    
-    public func touchesCancelled(sender: AnyObject!) {
-        guard let delegate = delegate else {
-            return
-        }
-        delegate.touchesCancelled(self)
     }
 }
