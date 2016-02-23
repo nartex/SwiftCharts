@@ -69,7 +69,15 @@ public class HikeChartView: UIView {
                 chartPoints.appendContentsOf(dataSet.points.map({$0.chartPoint!}))
             }
             
-            self.showingEmptyChart = chartPoints.count <= 2
+            var isZero = true
+            for c in chartPoints {
+                if c.y.scalar != 0 {
+                    isZero = false
+                    break
+                }
+            }
+            
+            self.showingEmptyChart = chartPoints.count <= 2 || isZero
             if self.showingEmptyChart {
                 chartPoints = [ChartPoint(x: ChartAxisValue(scalar: 0), y: ChartAxisValue(scalar: 0)), ChartPoint(x: ChartAxisValue(scalar: 1000), y: ChartAxisValue(scalar: 50))]
             }
