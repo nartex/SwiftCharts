@@ -93,11 +93,10 @@ public class HikeChartView: UIView {
             let xModel = ChartAxisModel(axisValues: xValues!, lineColor: self.axisColor, axisTitleLabel: ChartAxisLabel(text: self.hikeChartAxisSettings.xAxisTitle, settings: HikeChartSettings.labelSettings))
             let yModel = ChartAxisModel(axisValues: yValues, lineColor: self.axisColor, axisTitleLabel: ChartAxisLabel(text: self.hikeChartAxisSettings.yAxisTitle, settings: HikeChartSettings.labelSettings.defaultVertical()))
             
-            let chartFrame = HikeChartSettings.chartFrame(self.bounds)
-            
-            self.coordsSpace = ChartCoordsSpaceLeftBottomSingleAxis(chartSettings: HikeChartSettings.chartSettings, chartFrame: chartFrame, xModel: xModel, yModel: yModel)
-            
             dispatch_async(dispatch_get_main_queue(), {
+                let chartFrame = HikeChartSettings.chartFrame(self.bounds)
+                self.coordsSpace = ChartCoordsSpaceLeftBottomSingleAxis(chartSettings: HikeChartSettings.chartSettings, chartFrame: chartFrame, xModel: xModel, yModel: yModel)
+            
                 let (xAxis, yAxis, innerFrame) = (self.coordsSpace!.xAxis, self.coordsSpace!.yAxis, self.coordsSpace!.chartInnerFrame)
                 
                 var layers: [ChartLayer] = [
